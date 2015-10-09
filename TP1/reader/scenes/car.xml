@@ -46,8 +46,8 @@
         <amplif_factor s="1" t="1" />                  <!-- x/s, y/t -->
     </TEXTURE>
 
-    <TEXTURE id="pneu">
-        <file path="scenes/textures/pneu.jpg" />                             
+    <TEXTURE id="roda">
+        <file path="scenes/textures/roda.jpg" />                             
         <amplif_factor s="1" t="1" />                  <!-- x/s, y/t -->
     </TEXTURE>
 
