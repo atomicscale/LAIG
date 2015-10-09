@@ -1,0 +1,330 @@
+<SCENE>
+
+<INITIALS>
+    <frustum near="0.1" far="500"/>                 
+    <translation x="-1" y="1" z="0" />               
+    <rotation axis="x" angle="0" />                
+    <rotation axis="y" angle="0" />                
+    <rotation axis="z" angle="0" />                
+    <scale sx="0.25" sy="0.25" sz="0.25" />         
+    <reference length="5" />    
+</INITIALS>
+
+
+<ILLUMINATION>
+    <ambient r="0.2" g="0.2" b="0.2" a="1" />       
+    <background r="0" g="0" b="0" a="1" />    
+</ILLUMINATION>
+
+
+<LIGHTS>
+    <LIGHT id="luzCarro">                                    <!-- light identifier -->
+       <enable value ="1" />                          
+        <position x="30" y="10" z="0" w="1" />             
+        <ambient r="0.5" g="0.5" b="0.5" a="1.0" />       
+        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
+        <specular r="1.0" g="1.0" b="1.0" a="1.0" />  
+        </LIGHT>                                      
+</LIGHTS>
+
+
+
+<TEXTURES>
+    <TEXTURE id="vidroLateral">
+        <file path="scenes/textures/vidroL.jpg" />                             
+        <amplif_factor s="1" t="1" />                  <!-- x/s, y/t -->
+    </TEXTURE>
+
+     
+    <TEXTURE id="vidroFrontal">
+        <file path="scenes/textures/vidroF.jpg" />                             
+        <amplif_factor s="1" t="1" />                  <!-- x/s, y/t -->
+    </TEXTURE>
+
+    <TEXTURE id="estradaimg">
+        <file path="scenes/textures/estrada.jpg" />                            
+        <amplif_factor s="1" t="1" />                  <!-- x/s, y/t -->
+    </TEXTURE>
+
+    <TEXTURE id="pneu">
+        <file path="scenes/textures/pneu.jpg" />                             
+        <amplif_factor s="1" t="1" />                  <!-- x/s, y/t -->
+    </TEXTURE>
+
+    
+</TEXTURES>
+
+
+
+<MATERIALS>
+    <MATERIAL id="wheelMaterial">                                  
+        <shininess value="1" />
+        <specular r="0.2" g="0.2" b="0.2" a="1" />        
+        <diffuse r="0.0" g="0.207" b="0.0" a="1" />       
+        <ambient r="0.1" g="0.1" b="0.1" a="1" />         
+        <emission r="0.0" g="0.0" b="0.0" a="0" />         
+    </MATERIAL>
+
+    <MATERIAL id="downCar">                                  
+        <shininess value="1" />
+        <specular r="0" g="0" b="0" a="1" />        
+        <diffuse r="1.0" g="0.68" b="0.4" a="1" />        
+        <ambient r="0.2" g="0.2" b="0.2" a="1" />         
+        <emission r="0.0" g="0.0" b="0.0" a="0" />   
+    </MATERIAL>
+
+    <MATERIAL id="upCar">                                  
+        <shininess value="1" />
+        <specular r="0" g="0" b="0" a="1" />        
+        <diffuse r="1.0" g="0.68" b="0.4" a="1" />        
+        <ambient r="0.2" g="0.2" b="0.2" a="1" />         
+        <emission r="0.0" g="0.0" b="0.0" a="0" />     
+    </MATERIAL>
+
+   
+    <MATERIAL id="defaultMaterial">                                  
+       <shininess value="1" />
+        <specular r="0.0" g="0.0" b="0.0" a="1" />        
+        <diffuse r="0.5" g="0.5" b="0.5" a="1" />       
+        <ambient r="0.0" g="0.0" b="0.0" a="1" />         
+        <emission r="0.0" g="0.0" b="0.0" a="0" />           
+    </MATERIAL>
+
+</MATERIALS>
+
+
+<LEAVES>
+
+    <LEAF id="retangulo" type="rectangle" args="0 4 5 0" />
+    <LEAF id="cilindro" type="cylinder" args="4 1 1 20 20" /> 
+    <LEAF id="esfera" type="sphere" args="2 20 20" />
+    <LEAF id="triangulo" type="triangle" args="2 0 12 12 0 2 0 0 0" />
+
+    <!-- Parameters of the above primitives:                                                         -->
+        <!--rectangle: 2D coordinates for left-top and right-bottom vertices.                        -->
+        <!-- cylinder:  height, bottom radius, top radius, sections along height, parts per section  -->
+        <!-- sphere:    radius, parts along radius, parts per section                                -->
+        <!-- triangle:   coordinates of each vertex                                                  -->
+
+</LEAVES>
+
+
+<NODES>
+
+    <ROOT id="root" />     
+
+    <!-- main -->
+    <NODE id="root">       
+        <MATERIAL id="defaultMaterial" />         
+        <TEXTURE id="null" />  
+
+        <DESCENDANTS>
+            <DESCENDANT id="carro" />    
+            <DESCENDANT id="estrada" /> 
+        </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="estrada">      
+        <MATERIAL id="null" />    
+        <TEXTURE id="estradaimg" /> 
+
+        <DESCENDANTS>
+            <DESCENDANT id="retangulo" />            
+       </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="carro">      
+        <MATERIAL id="null" />    
+        <TEXTURE id="null" />                  
+
+        
+
+        <DESCENDANTS>
+            <DESCENDANT id="rodas" />  
+            <DESCENDANT id="parteCima" />      
+            
+        </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="rodas">      
+        <MATERIAL id="null" />    
+        <TEXTURE id="null" />                  
+
+       
+
+        <DESCENDANTS>
+            <DESCENDANT id="roda1" />  <!--roda1-->
+            <DESCENDANT id="roda2" />  <!--roda2-->
+            <DESCENDANT id="roda3" />  <!--roda3-->
+            <DESCENDANT id="roda4" />  <!--roda4-->           
+            
+        </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="parteCima">      
+        <MATERIAL id="null" />    
+        <TEXTURE id="null" />                  
+
+        <DESCENDANTS>
+            <DESCENDANT id="parteSuperior" />  
+            <DESCENDANT id="parteInferior" />            
+        </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="parteSuperior">      
+        <MATERIAL id="null" />    
+        <TEXTURE id="null" /> 
+
+        <DESCENDANTS>
+            <DESCENDANT id="lateral" />  
+            <DESCENDANT id="vidroF" /> 
+            <DESCENDANT id="vidroT" />           
+       </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="lateral">      
+        <MATERIAL id="null" />    
+        <TEXTURE id="null" /> 
+
+        <DESCENDANTS>
+            <DESCENDANT id="lateral1" />  
+            <DESCENDANT id="lateral2" />
+            <DESCENDANT id="lateral3" />            
+       </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="vidroF">      
+        <MATERIAL id="null" />    
+        <TEXTURE id="vidroFrontal" /> 
+
+        <DESCENDANTS>
+            <DESCENDANT id="retangulo" />           
+       </DESCENDANTS>
+    </NODE>
+
+    <NODE id="vidroT">      
+        <MATERIAL id="null" />    
+        <TEXTURE id="vidroFrontalo" /> 
+
+        <DESCENDANTS>
+            <DESCENDANT id="retangulo" />  
+         </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="lateral1">      
+        <MATERIAL id="null" />    
+        <TEXTURE id="vidroLateral" /> 
+
+        <DESCENDANTS>
+            <DESCENDANT id="retangulo" />            
+       </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="lateral2">      
+        <MATERIAL id="null" />    
+        <TEXTURE id="vidroLateral" /> 
+
+        <DESCENDANTS>
+            <DESCENDANT id="retangulo" />            
+       </DESCENDANTS>
+
+    </NODE>
+
+
+    <!--tejadilho-->
+    <NODE id="lateral3">      
+        <MATERIAL id="null" />    
+        <TEXTURE id="null" /> 
+
+        <DESCENDANTS>
+            <DESCENDANT id="retangulo" />            
+       </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="parteInferior">      
+        <MATERIAL id="null" />    
+        <TEXTURE id="null" /> 
+
+        <DESCENDANTS>
+            <DESCENDANT id="lado1" />  
+            <DESCENDANT id="lado2" /> 
+            <DESCENDANT id="lado3" /> 
+            <DESCENDANT id="lado4" />  
+            <DESCENDANT id="lado5" /> 
+            <DESCENDANT id="lado6" />          
+       </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="lado1">      
+        <MATERIAL id="null" />    
+        <TEXTURE id="null" /> 
+
+        <DESCENDANTS>
+            <DESCENDANT id="retangulo" />    
+       </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="lado2">      
+        <MATERIAL id="null" />    
+        <TEXTURE id="null" /> 
+
+        <DESCENDANTS>
+            <DESCENDANT id="retangulo" />    
+       </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="lado3">      
+        <MATERIAL id="null" />    
+        <TEXTURE id="null" /> 
+
+        <DESCENDANTS>
+            <DESCENDANT id="retangulo" />    
+       </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="lado4">      
+        <MATERIAL id="null" />    
+        <TEXTURE id="null" /> 
+
+        <DESCENDANTS>
+            <DESCENDANT id="retangulo" />    
+       </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="lado5">      
+        <MATERIAL id="null" />    
+        <TEXTURE id="null" /> 
+
+        <DESCENDANTS>
+            <DESCENDANT id="retangulo" />    
+       </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="lado6">      
+        <MATERIAL id="null" />    
+        <TEXTURE id="null" /> 
+
+        <DESCENDANTS>
+            <DESCENDANT id="retangulo" />    
+       </DESCENDANTS>
+
+    </NODE>
+</NODES>
+
+</SCENE>
