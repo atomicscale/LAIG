@@ -97,7 +97,7 @@ LSXscene.prototype.onGraphLoaded = function() {
 };
 
 LSXscene.prototype.display = function() {
-    this.shader.bind();
+    //this.shader.bind();
     this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
@@ -127,7 +127,7 @@ LSXscene.prototype.display = function() {
         }
     }
 
-    this.shader.unbind();
+   // this.shader.unbind();
 };
 
 /**
@@ -160,7 +160,7 @@ LSXscene.prototype.applyInitials = function() {
  * Adds lights to scene defined in <LIGHTS>
  */
 LSXscene.prototype.initLights = function() {
-    this.shader.bind();
+    //this.shader.bind();
 
     this.lights = [];
     this.lightsID = [];
@@ -182,7 +182,7 @@ LSXscene.prototype.initLights = function() {
         this.lightsID[l.id] = l.enabled;
     }
 
-    this.shader.unbind();
+    //this.shader.unbind();
 
     this.interface.initLights();
 
