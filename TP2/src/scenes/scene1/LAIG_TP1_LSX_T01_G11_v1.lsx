@@ -92,6 +92,7 @@
     <LEAF id="asa" type="cylinder" args="0.7 0.2 0.1 20 20" />
     <LEAF id="front" type="cylinder" args="0.7 0.01 0.1 20 20" />
     <LEAF id="vehicle" type="vehicle" />
+    <LEAF id="terrain" type="terrain" texture="ii" heightmap="ii" />
     <LEAF id="plane" type="plane" parts="ii" />
     <LEAF id="patch" type="patch" order="ii" partsU="ii" partsV="ii">
     	<controlpoint x="ff" y="ff" z="ff" />
