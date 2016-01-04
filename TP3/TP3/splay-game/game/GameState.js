@@ -100,6 +100,7 @@ GameState.prototype.logic = function () {
       case 3:
         console.log("<--- Moving Piece --->");
         this.checkIfTheMoveIsPossible();
+        //this.promotePiece();
         this.movePiece();
         this.state = 1;
       default:
@@ -235,10 +236,24 @@ GameState.prototype.movePiece = function () {
 
 GameState.prototype.pushPieceBoard = function (id, row, col, type) {
 
+
+	//if (row == this.selectedPiece.getRow() + 1 || row == this.selectedPiece.getRow() - 1) {
       if(type == 0)
         this.gameBoard[row][col].push(this.BlackPieces[id]);
       else if(type == 1)
         this.gameBoard[row][col].push(this.WhitePieces[id]);
+	//}
+	/*else if (col = this.selectedPiece.getCol() + 1 || col == this.selectedPiece.getRow() - 1){
+		if(type == 0)
+        this.gameBoard[row][col].push(this.BlackPieces[id]);
+      else if(type == 1)
+        this.gameBoard[row][col].push(this.WhitePieces[id]);
+	}*/
+	else{
+		console.log("Invalid Move! Try Again!");
+
+	/*************************************/
+	}
 
 }
 
