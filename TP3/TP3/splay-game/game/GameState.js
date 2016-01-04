@@ -215,6 +215,8 @@ GameState.prototype.movePiece = function () {
         this.pushPieceBoard(idPieceTop, coordToMoveX, coordToMoveY, typePiece); // pushing piece to the board
         this.gameBoard[rowPiece][colPiece].splice(i, 1);
 
+
+//if (coordToMoveX == this.selectedPiece.getRow() + 1 || coordToMoveX == this.selectedPiece.getRow() - 1) {
         if(typePiece == 0)
         {
 
@@ -231,6 +233,8 @@ GameState.prototype.movePiece = function () {
         }
 
     }
+
+  
 
 }
 
