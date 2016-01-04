@@ -1,0 +1,116 @@
+<SCENE>
+
+	<!-- INITIALS -->
+	<INITIALS>
+		<frustum near="0.1" far="500"/>
+		<translation x="0" y="0" z="0" />
+		<rotation axis="x" angle="0" />
+		<rotation axis="y" angle="0" />
+		<rotation axis="z" angle="0" />
+		<scale sx="1" sy="1" sz="1" />
+		<reference length="3" />
+	</INITIALS>
+
+
+	<!-- ILLUMINATION -->
+	<ILLUMINATION>
+		<ambient r="0.20" g="0.20" b="0.20" a="1" />
+		<background r="0.5" g="0.5" b="0.5" a="0." />
+	</ILLUMINATION>
+
+
+	<!-- LIGHTS -->
+	<LIGHTS>
+
+		<LIGHT id="LightA">
+			<enable value ="1" />
+			<position x="10" y="10" z="10" w="1" />
+			<ambient r="0" g="0" b="0" a="1" />
+			<diffuse r=".9" g="0.9" b="0.9" a="1" />
+			<specular r=".7" g=".7" b=".7" a="1" />
+		</LIGHT>
+
+		<LIGHT id="LightB">
+			<enable value ="1" />
+			<position x="13" y="13" z="13" w="1" />
+			<ambient r="0" g="0" b="0" a="1" />
+			<diffuse r=".7" g="0.7" b="0.7" a="1" />
+			<specular r=".7" g=".7" b=".7" a="1" />
+		</LIGHT>
+
+		<LIGHT id="LightC">
+			<enable value ="1" />
+		 <position x="15" y="15" z="15" w="1" />
+			<ambient r="0" g="0" b="0" a="1" />
+			<diffuse r=".7" g="0.7" b="0.7" a="1" />
+			<specular r=".7" g=".7" b=".7" a="1" />
+		</LIGHT>
+
+	</LIGHTS>
+
+
+	<!-- TEXTURES -->
+	<TEXTURES>
+
+	</TEXTURES>
+
+
+	<!-- MATERIALS -->
+	<MATERIALS>
+
+		<MATERIAL id="defaultMaterial">
+			<shininess value="5" />
+			<ambient r="1" g="1" b="1" a="1" />
+			<diffuse r=".3" g=".3" b=".3" a="1" />
+			<specular r=".3" g=".3" b=".3" a="1" />
+			<emission r=".1" g=".1" b=".1" a="1" />
+		</MATERIAL>
+
+	</MATERIALS>
+
+
+	<!-- Animations -->
+	<ANIMATIONS>
+
+		<animation id="planeFly1" span="1" rot="500" type="linear">
+			<controlpoint xx="3" yy="3" zz="7"/>
+			<controlpoint xx="-1" yy="3" zz="7"/>
+		</animation>
+
+		<animation id="planeFly2" span="6" rot="500" type="linear">
+			<controlpoint xx="-1" yy="3" zz="7"/>
+			<controlpoint xx="-1" yy="5" zz="-1"/>
+			<controlpoint xx="7" yy="1" zz="-1"/>
+			<controlpoint xx="7" yy="3" zz="7"/>
+		</animation>
+
+		<animation id="planeFly3" span="1" rot="500" type="linear">
+			<controlpoint xx="7" yy="3" zz="7"/>
+			<controlpoint xx="3" yy="3" zz="7"/>
+		</animation>
+
+	</ANIMATIONS>
+
+	<LEAVES>
+		<LEAF id="terrain_leaf" type="terrain" texture="" heightmap=""/>
+		<LEAF id="wall" type="rectangle" args="0 12 22 -2" />
+	</LEAVES>
+
+
+	<NODES>
+		<!-- Root -->
+		<ROOT id="root" />
+
+		<NODE id="root">
+			<MATERIAL id="defaultMaterial" />
+			<TEXTURE id="null" />
+
+			<DESCENDANTS>
+
+			</DESCENDANTS>
+		</NODE>
+
+</NODES>
+
+
+</SCENE>

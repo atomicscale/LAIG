@@ -110,6 +110,36 @@
     </LEAF>
 </LEAVES>
  
+ <animations>
+        <animation id="preparetolift" span="4" type="linear">
+            <controlpoint xx="0" yy="-2" zz="0" />
+            <controlpoint xx="0" yy="4" zz="0" />
+        </animation>
+
+        <animation id="rotation" span="2" type="circular" center="0 4 0" radius="0" startang="-90" rotang="180" />
+
+        <animation id="liftoff" span="5" type="linear">
+            <controlpoint xx="0" yy="4" zz="0" />
+            <controlpoint xx="0" yy="5" zz="-1" />
+            <controlpoint xx="14" yy="14" zz="-14" />
+        </animation>
+
+        <animation id="teste" span="1" type="linear">
+            <controlpoint xx="0" yy="0" zz="0" />
+            <controlpoint xx="3" yy="1" zz="0" />
+            <controlpoint xx="0" yy="0" zz="0" />
+        </animation>
+
+        <animation id="teste2" span="5" type="linear">
+            <controlpoint xx="0" yy="0" zz="0" />
+            <controlpoint xx="-3" yy="-1" zz="0" />
+            <controlpoint xx="0" yy="0" zz="0" />
+        </animation>
+
+        <animation id="circ" span="2" type="circular" center="0 0 0" radius="0" startang="0" rotang="360" />
+
+    </animations>
+
 <NODES>
  
     <ROOT id="main" />    
@@ -119,13 +149,13 @@
         <TEXTURE id="null" />                
  
         <DESCENDANTS>
-            <DESCENDANT id="estrada" />
+          //  <DESCENDANT id="estrada" />
             <DESCENDANT id="aviao" />
-            <DESCENDANT id="paisagem"/>
+           // <DESCENDANT id="paisagem"/>
         </DESCENDANTS>
     </NODE>
    
-		<NODE id="paisagem">      
+		/*<NODE id="paisagem">      
         <MATERIAL id="defaultMaterial" />      
         <TEXTURE id="sky" /> 
 
@@ -150,14 +180,19 @@
             <DESCENDANT id="rectangulo" />              
         </DESCENDANTS>
     </NODE>
- 
+ */
     <NODE id="aviao">      
         <MATERIAL id="null" />    
         <TEXTURE id="null" />
+
+        <animationref id="preparetolift" />
+        <animationref id="rotation" />
+        <animationref id="liftoff" />
  
         <DESCENDANTS>
             <DESCENDANT id="parteSup" />
-            <DESCENDANT id="parteInf" />                    
+            <DESCENDANT id="parteInf" />  
+            <DESCENDANT id="vehicle" />                  
         </DESCENDANTS>
     </NODE>
 
