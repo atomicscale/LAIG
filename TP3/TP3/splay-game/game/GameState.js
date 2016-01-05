@@ -28,14 +28,14 @@ function GameState(scene) {
   this.BlackPieces[7] = new MyPiece(this.scene, 7, 0, 1, 4, 0);
   this.BlackPieces[8] = new MyPiece(this.scene, 8, 0, 1, 6, 0);
   
-  this.WhitePieces[9] = new MyPiece(this.scene, 19, 1, 6, 0, 0);
-  this.WhitePieces[10] = new MyPiece(this.scene, 20, 1, 6, 2, 0);
-  this.WhitePieces[11] = new MyPiece(this.scene, 21, 1, 6, 4, 0);
-  this.WhitePieces[12] = new MyPiece(this.scene, 22, 1, 6, 6, 0);
-  this.WhitePieces[13] = new MyPiece(this.scene, 23, 1, 7, 1, 0);
-  this.WhitePieces[14] = new MyPiece(this.scene, 24, 1, 7, 3, 0);
-  this.WhitePieces[15] = new MyPiece(this.scene, 25, 1, 7, 5, 0);
-  this.WhitePieces[16] = new MyPiece(this.scene, 26, 1, 7, 7, 0);
+  this.WhitePieces[9] = new MyPiece(this.scene, 9, 1, 6, 0, 0);
+  this.WhitePieces[10] = new MyPiece(this.scene, 10, 1, 6, 2, 0);
+  this.WhitePieces[11] = new MyPiece(this.scene, 11, 1, 6, 4, 0);
+  this.WhitePieces[12] = new MyPiece(this.scene, 12, 1, 6, 6, 0);
+  this.WhitePieces[13] = new MyPiece(this.scene, 13, 1, 7, 1, 0);
+  this.WhitePieces[14] = new MyPiece(this.scene, 14, 1, 7, 3, 0);
+  this.WhitePieces[15] = new MyPiece(this.scene, 15, 1, 7, 5, 0);
+  this.WhitePieces[16] = new MyPiece(this.scene, 16, 1, 7, 7, 0);
   
 
 
@@ -47,12 +47,14 @@ function GameState(scene) {
                     [[],[],[],[],[],[],[],[]],
                     [[],[],[],[],[],[],[],[]],
                     [[],[],[],[],[],[],[],[]],
-                    [[],[this.WhitePieces[9]],[],[this.WhitePieces[10]],[],[this.WhitePieces[11]],[],[this.WhitePieces[12]]],
-                    [[this.WhitePieces[13]],[],[this.WhitePieces[14]],[],[this.WhitePieces[15]],[],[this.WhitePieces[16]],[]]
+                    [[this.WhitePieces[9]],[],[this.WhitePieces[10]],[],[this.WhitePieces[11]],[],[this.WhitePieces[12]],[]],
+                    [[],[this.WhitePieces[13]],[],[this.WhitePieces[14]],[],[this.WhitePieces[15]],[],[this.WhitePieces[16]]]
                     ];
 
 
   this.board = new MyBoard(this.scene);
+
+ 
 
   /* Picking Variables */
   this.selectedPiece;
@@ -87,6 +89,7 @@ GameState.prototype.logic = function () {
 
       case 1:
         console.log("<--- Picking Piece --->");
+        
         if(this.PiecePicked())
           this.state = 2;
         break;
@@ -215,17 +218,18 @@ GameState.prototype.movePiece = function () {
         this.pushPieceBoard(idPieceTop, coordToMoveX, coordToMoveY, typePiece); // pushing piece to the board
         this.gameBoard[rowPiece][colPiece].splice(i, 1);
 
+        console.log(typePiece);
 
 //if (coordToMoveX == this.selectedPiece.getRow() + 1 || coordToMoveX == this.selectedPiece.getRow() - 1) {
         if(typePiece == 0)
         {
-
+        	console.log("entrou1");
           this.BlackPieces[idPieceTop].setRow(coordToMoveX);
           this.BlackPieces[idPieceTop].setCol(coordToMoveY);
           this.BlackPieces[idPieceTop].setHeight(increment);
 
         } else if(typePiece == 1){
-
+        	console.log("entrou");
           this.WhitePieces[idPieceTop].setRow(coordToMoveX);
           this.WhitePieces[idPieceTop].setCol(coordToMoveY);
           this.WhitePieces[idPieceTop].setHeight(increment);
@@ -242,10 +246,12 @@ GameState.prototype.pushPieceBoard = function (id, row, col, type) {
 
 
 	//if (row == this.selectedPiece.getRow() + 1 || row == this.selectedPiece.getRow() - 1) {
-      if(type == 0)
+      if(type == 0){
         this.gameBoard[row][col].push(this.BlackPieces[id]);
-      else if(type == 1)
+    }
+      else if(type == 1){
         this.gameBoard[row][col].push(this.WhitePieces[id]);
+    }
 	//}
 	/*else if (col = this.selectedPiece.getCol() + 1 || col == this.selectedPiece.getRow() - 1){
 		if(type == 0)
@@ -253,11 +259,11 @@ GameState.prototype.pushPieceBoard = function (id, row, col, type) {
       else if(type == 1)
         this.gameBoard[row][col].push(this.WhitePieces[id]);
 	}*/
-	else{
+	/*else{
 		console.log("Invalid Move! Try Again!");
 
-	/*************************************/
-	}
+	/************************************
+	}*/
 
 }
 
@@ -313,14 +319,14 @@ GameState.prototype.checkIfTheMoveIsPossible = function () {
             var requestString = "checkRightMoves(" + boardGame + "," + currentRow + "," + currentCol + ")";
 
             var rightMoves;
-            console.log("Can't move to right")
+           // console.log("Can't move to right")
 
             /* Add impossible moves*/
 
-         /*   this.server.getPrologRequest(requestString, function(data) {
+            this.server.getPrologRequest(requestString, function(data) {
              rightMoves = data.currentTarget.responseText;
             });
-		*/
+		
             if(rightMoves == 6){
               console.log("Can move to right");
             }

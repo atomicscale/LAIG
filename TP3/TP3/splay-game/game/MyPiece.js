@@ -46,7 +46,7 @@ MyPiece.prototype.display = function() {
       this.cylinder.display();
       this.scene.popMatrix();
 
-  } else if (this.type == 1 && this.id < 37){   /* White Piece */
+  } else if (this.type == 1){   /* White Piece */
 
       this.scene.pushMatrix();
       this.scene.rotate(Math.PI/2, 1, 0, 0);

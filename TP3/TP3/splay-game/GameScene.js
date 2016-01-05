@@ -632,6 +632,7 @@ GameScene.prototype.displayGame = function(){
   }
 
 
+
   /* Whites Picking  */
   for(var i = 9; i <= 16; i++){
 
