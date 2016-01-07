@@ -19,14 +19,14 @@ function GameState(scene) {
 
   this.server = new PrologServer(this.scene);
 
-  this.BlackPieces[1] = new MyPiece(this.scene, 1, 0, 0, 1, 0);
-  this.BlackPieces[2] = new MyPiece(this.scene, 2, 0, 0, 3, 0);
-  this.BlackPieces[3] = new MyPiece(this.scene, 3, 0, 0, 5, 0);
-  this.BlackPieces[4] = new MyPiece(this.scene, 4, 0, 0, 7, 0);
-  this.BlackPieces[5] = new MyPiece(this.scene, 5, 0, 1, 0, 0);
-  this.BlackPieces[6] = new MyPiece(this.scene, 6, 0, 1, 2, 0);
-  this.BlackPieces[7] = new MyPiece(this.scene, 7, 0, 1, 4, 0);
-  this.BlackPieces[8] = new MyPiece(this.scene, 8, 0, 1, 6, 0);
+  this.BlackPieces[1] = new MyPiece(this.scene, 1, 0, 0, 0, 0);
+  this.BlackPieces[2] = new MyPiece(this.scene, 2, 0, 0, 2, 0);
+  this.BlackPieces[3] = new MyPiece(this.scene, 3, 0, 0, 4, 0);
+  this.BlackPieces[4] = new MyPiece(this.scene, 4, 0, 0, 6, 0);
+  this.BlackPieces[5] = new MyPiece(this.scene, 5, 0, 1, 1, 0);
+  this.BlackPieces[6] = new MyPiece(this.scene, 6, 0, 1, 3, 0);
+  this.BlackPieces[7] = new MyPiece(this.scene, 7, 0, 1, 5, 0);
+  this.BlackPieces[8] = new MyPiece(this.scene, 8, 0, 1, 7, 0);
   
   this.WhitePieces[9] = new MyPiece(this.scene, 9, 1, 6, 0, 0);
   this.WhitePieces[10] = new MyPiece(this.scene, 10, 1, 6, 2, 0);
@@ -41,8 +41,8 @@ function GameState(scene) {
 
   /* Represents the game board */
   this.gameBoard = [
-                    [[],[this.BlackPieces[1]],[],[this.BlackPieces[2]],[],[this.BlackPieces[3]],[],[this.BlackPieces[4]]],
-                    [[this.BlackPieces[5]],[],[this.BlackPieces[6]],[],[this.BlackPieces[7]],[],[this.BlackPieces[8]],[]],
+                    [[this.BlackPieces[1]],[],[this.BlackPieces[2]],[],[this.BlackPieces[3]],[],[this.BlackPieces[4]],[]],
+                    [[],[this.BlackPieces[5]],[],[this.BlackPieces[6]],[],[this.BlackPieces[7]],[],[this.BlackPieces[8]]],
                     [[],[],[],[],[],[],[],[]],
                     [[],[],[],[],[],[],[],[]],
                     [[],[],[],[],[],[],[],[]],
