@@ -102,10 +102,16 @@ GameState.prototype.logic = function () {
 
       case 3:
         console.log("<--- Moving Piece --->");
-        this.checkIfTheMoveIsPossible();
+        if (this.checkIfTheMoveIsPossible()){
         //this.promotePiece();
         this.movePiece();
         this.state = 1;
+  	  }
+    	else
+    {
+    	this.state = 1;
+    }
+
       default:
         break;
   }
@@ -218,18 +224,18 @@ GameState.prototype.movePiece = function () {
         this.pushPieceBoard(idPieceTop, coordToMoveX, coordToMoveY, typePiece); // pushing piece to the board
         this.gameBoard[rowPiece][colPiece].splice(i, 1);
 
-        console.log(typePiece);
+        
 
 //if (coordToMoveX == this.selectedPiece.getRow() + 1 || coordToMoveX == this.selectedPiece.getRow() - 1) {
         if(typePiece == 0)
         {
-        	console.log("entrou1");
+        	
           this.BlackPieces[idPieceTop].setRow(coordToMoveX);
           this.BlackPieces[idPieceTop].setCol(coordToMoveY);
           this.BlackPieces[idPieceTop].setHeight(increment);
 
         } else if(typePiece == 1){
-        	console.log("entrou");
+
           this.WhitePieces[idPieceTop].setRow(coordToMoveX);
           this.WhitePieces[idPieceTop].setCol(coordToMoveY);
           this.WhitePieces[idPieceTop].setHeight(increment);
@@ -315,29 +321,15 @@ GameState.prototype.checkIfTheMoveIsPossible = function () {
           if(currentCol - nextCol < 0)
           {
             // Right Move
-
-            var requestString = "checkRightMoves(" + boardGame + "," + currentRow + "," + currentCol + ")";
-
-            var rightMoves;
-           // console.log("Can't move to right")
-
-            /* Add impossible moves*/
-
-            this.server.getPrologRequest(requestString, function(data) {
-             rightMoves = data.currentTarget.responseText;
-            });
-		
-            if(rightMoves == 6){
-              console.log("Can move to right");
-            }
-
+            	console.log("Invalid move! You can't move to the right!");
+            	return false;
 
           } else {
 
             // Left Move
 
-            /* */
-
+            console.log("Invalid move! You can't move to the left!");
+            	return false;
 
           }
 
@@ -351,15 +343,16 @@ GameState.prototype.checkIfTheMoveIsPossible = function () {
 
           // Up move
 
-          /* */
+          console.log("Invalid move! You can't move up!");
+            	return false;
 
 
         } else {
 
           // Down Move
 
-
-          /* */
+          console.log("Invalid move! You can't move down!");
+            	return false;
 
         }
 
@@ -370,26 +363,29 @@ GameState.prototype.checkIfTheMoveIsPossible = function () {
 
         // Lower Right
         if(currentCol - nextCol > 0 && currentRow - nextRow > 0){
-
+        	console.log("Valid Move, keep playing!")
+        	return true;
         }
 
         // Lower Left
         if(currentCol - nextCol > 0 && currentRow - nextRow < 0){
-
+        	console.log("Valid Move, keep playing!")
+        	return true;
         }
 
         // Up Left
         if(currentCol - nextCol < 0 && currentRow - nextRow < 0){
-
+        	console.log("Valid Move, keep playing!")
+        	return true;
         }
 
         // Up Right
         if(currentCol - nextCol < 0 && currentRow - nextRow > 0){
-
+        	console.log("Valid Move, keep playing!")
+        	return true;
         }
-
       }
-
+              	return false;
 }
 
 GameState.prototype.convertBoard = function() {
