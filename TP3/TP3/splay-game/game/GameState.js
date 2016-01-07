@@ -91,7 +91,7 @@ GameState.prototype.logic = function () {
         console.log("<--- Picking Piece --->");
         
         if(this.PiecePicked())
-          this.state = 2;
+          this.state = 2; 
         break;
 
       case 2:
@@ -105,6 +105,7 @@ GameState.prototype.logic = function () {
         if (this.checkIfTheMoveIsPossible()){
         //this.promotePiece();
         this.movePiece();
+        this.checkIfPromotionAvailable();
         this.state = 1;
   	  }
     	else
@@ -137,6 +138,7 @@ GameState.prototype.PiecePicked = function () {
               this.selectedPiece = object;
               this.selectedtype = object.objectName();
               this.scene.pickResults.splice(0, this.scene.pickResults.length);
+
               return true;
 
             }
@@ -165,7 +167,6 @@ GameState.prototype.BoardPick = function () {
 				console.log("Selected board -> " + objectId);
 				this.scene.pickResults.splice(0, this.scene.pickResults.length);
 				return true;
-
 			}
 
 			console.log("---> Pressed outside Board! Try again!");
@@ -270,6 +271,32 @@ GameState.prototype.pushPieceBoard = function (id, row, col, type) {
 
 	/************************************
 	}*/
+
+}
+
+GameState.prototype.checkIfPromotionAvailable = function (){
+	var currentRow = this.selectedPiece.getRow();
+    //var currentCol = this.selectedPiece.getCol();
+    var typePiece = this.selectedPiece.getType();
+
+    if (typePiece == 0){
+    	if (currentRow == 7){
+    		console.log("Promotion Available");
+    	}
+    	else{
+    		console.log("Promotion Not Available");
+    	}
+    }
+    	if (typePiece == 1){
+    		if(currentRow == 0){
+    			console.log("Promotion Available");
+    		}
+    	else{
+    		console.log("Promotion Not Available!");
+    	}
+
+   }
+
 
 }
 
