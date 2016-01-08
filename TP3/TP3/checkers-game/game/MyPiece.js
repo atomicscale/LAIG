@@ -56,7 +56,47 @@ MyPiece.prototype.display = function() {
       this.cylinder.display();
       this.scene.popMatrix();
 
-  } else {                      /* EmptyCell */
+  } else if (this.type == 2){  /* DoubleCell  White*/
+
+      this.scene.pushMatrix();
+      this.scene.rotate(Math.PI/2, 1, 0, 0);
+      this.scene.translate(0, 0, -1);
+      this.scene.translate(5*this.row + 2.4, 5*this.col + 2.4, -this.height*1.05);
+      this.white.apply();
+      this.cylinder.display();
+      this.scene.popMatrix();
+
+      this.scene.pushMatrix();
+      this.scene.rotate(Math.PI/2, 1, 0, 0);
+      this.scene.translate(0, 0, -1);
+      this.scene.translate(5*this.row + 2.4, 5*this.col + 2.4, -this.height*1.05 - 1.2);
+      this.white.apply();
+      this.cylinder.display();
+      this.scene.popMatrix();
+
+
+
+  } else if (this.type == 3){  /* DoubleCell  Black*/
+
+      this.scene.pushMatrix();
+      this.scene.rotate(Math.PI/2, 1, 0, 0);
+      this.scene.translate(0, 0, -1);
+      this.scene.translate(5*this.row + 2.4, 5*this.col + 2.4, -this.height*1.05);
+      this.black.apply();
+      this.cylinder.display();
+      this.scene.popMatrix();
+
+      this.scene.pushMatrix();
+      this.scene.rotate(Math.PI/2, 1, 0, 0);
+      this.scene.translate(0, 0, -1);
+      this.scene.translate(5*this.row + 2.4, 5*this.col + 2.4, -this.height*1.05 - 1.2);
+      this.black.apply();
+      this.cylinder.display();
+      this.scene.popMatrix();
+
+
+
+  } else {  /* EmptyCell */
 
   }
 
@@ -93,6 +133,10 @@ MyPiece.prototype.setCol = function(newCol){
 
 MyPiece.prototype.setHeight = function(newH){
   this.height = newH;
+}
+
+MyPiece.prototype.setType = function(type){
+  this.type = type;
 }
 
 

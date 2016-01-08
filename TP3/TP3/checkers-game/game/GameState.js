@@ -89,7 +89,6 @@ GameState.prototype.logic = function () {
 
       case 1:
         console.log("<--- Picking Piece --->");
-        
         if(this.PiecePicked())
           this.state = 2; 
         break;
@@ -103,8 +102,11 @@ GameState.prototype.logic = function () {
       case 3:
         console.log("<--- Moving Piece --->");
         if (this.checkIfTheMoveIsPossible()){
-        this.movePiece();
-        this.checkIfCanConquer();
+        this.checkIfCanConquerLowerLeft();
+        this.checkIfCanConquerLowerRight();
+        this.checkIfCanConquerUpperRight();
+        this.checkIfCanConquerUpperLeft();
+		this.movePiece();
         this.checkIfPromotionAvailable();
         this.state = 1;
   	  }
@@ -242,6 +244,20 @@ GameState.prototype.movePiece = function () {
           this.WhitePieces[idPieceTop].setHeight(increment);
 
         }
+         else if(typePiece == 2){
+
+          this.WhitePieces[idPieceTop].setRow(coordToMoveX);
+          this.WhitePieces[idPieceTop].setCol(coordToMoveY);
+          this.WhitePieces[idPieceTop].setHeight(increment);
+
+        }
+         else if(typePiece == 3){
+
+          this.BlackPieces[idPieceTop].setRow(coordToMoveX);
+          this.BlackPieces[idPieceTop].setCol(coordToMoveY);
+          this.BlackPieces[idPieceTop].setHeight(increment);
+
+        }
 
     }
 
@@ -259,6 +275,13 @@ GameState.prototype.pushPieceBoard = function (id, row, col, type) {
       else if(type == 1){
         this.gameBoard[row][col].push(this.WhitePieces[id]);
     }
+    else if(type == 2){
+        this.gameBoard[row][col].push(this.WhitePieces[id]);
+    }
+    else if(type == 3){
+        this.gameBoard[row][col].push(this.BlackPieces[id]);
+    }
+
 	//}
 	/*else if (col = this.selectedPiece.getCol() + 1 || col == this.selectedPiece.getRow() - 1){
 		if(type == 0)
@@ -276,11 +299,15 @@ GameState.prototype.pushPieceBoard = function (id, row, col, type) {
 
 GameState.prototype.checkIfPromotionAvailable = function (){
 	var currentRow = this.selectedPiece.getRow();
-    //var currentCol = this.selectedPiece.getCol();
+    var currentCol = this.selectedPiece.getCol();
     var typePiece = this.selectedPiece.getType();
+    var id = this.selectedPiece.getid();
 
     if (typePiece == 0){
     	if (currentRow == 7){
+
+    		this.BlackPieces[id].setType(3);
+
     		console.log("Promotion Available");
     	}
     	else{
@@ -289,6 +316,9 @@ GameState.prototype.checkIfPromotionAvailable = function (){
     }
     	if (typePiece == 1){
     		if(currentRow == 0){
+
+    		this.WhitePieces[id].setType(2);
+
     			console.log("Promotion Available");
     		}
     	else{
@@ -300,46 +330,63 @@ GameState.prototype.checkIfPromotionAvailable = function (){
 
 }
 
-GameState.prototype.checkIfCanConquer = function (){
+GameState.prototype.checkIfCanConquerLowerLeft = function (){
 	var currentRow = this.selectedPiece.getRow();
 	var currentCol = this.selectedPiece.getCol();
 	var typePiece = this.selectedPiece.getType();
 
-	// check LowerRight
+	var currentRowLeft = currentRow - 1;
+	var currentColDown = currentCol + 1;
 
-	var lowerRight = this.gameBoard[currentRow - 1][currentCol - 1];
-	var lowerRightProtection = this.gameBoard[currentRow - 2][currentCol - 2];
+	var currentRowLeftProtection = currentRow - 2;
+	var currentColDownProtection = currentCol + 2;
+
+	if (currentRowLeft < 0 || currentRowLeft > 7 ){
+		return;
+	}
+
+	if (currentColDown > 7 || currentColDown < 0){
+		return;
+	}
+
+
+
+	if (currentRowLeftProtection < 0 || currentRowLeftProtection > 7 ){
+		console.log("Can't Conquer LowerLeft!- 1");
+		return;
+	}
+
+	if (currentColDownProtection > 7 || currentColDownProtection < 0){
+		console.log("Can't Conquer LowerLeft! - 2");
+		return;
+	}
 
 	var lowerLeft = this.gameBoard[currentRow - 1][currentCol + 1];
 	var lowerLeftProtection = this.gameBoard[currentRow - 2][currentCol + 2];
 
-	var upperRight = this.gameBoard[currentRow + 1][currentCol + 1];
-	var upperRightProtection = this.gameBoard[currentRow + 2][currentCol + 2];
-
-	var upperLeft = this.gameBoard[currentRow + 1][currentCol - 1];
-	var upperLeftProtection = this.gameBoard[currentRow + 2][currentCol + 2];
-
-
-	
-
-	if(lowerRight.length != 0 && lowerRight[0].type != typePiece)
-	{
-		if(lowerRightProtection == 0){
-			console.log("Can conquer to lowerRight!");
-			
-		}
-
-		else
-		{
-			console.log("Can't conquer to lowerLeft!");
-			
-		}
-		
-	}
 	// check LowerLeft
-	else if(lowerLeft.length != 0 && lowerLeft[0].type != typePiece)
+
+		if(lowerLeft.length != 0 && lowerLeft[0].type != typePiece)
 	{
 		if(lowerLeftProtection == 0){
+
+			var id = this.gameBoard[currentRowLeft][currentColDown][0].id;
+			var type = this.gameBoard[currentRowLeft][currentColDown][0].type;
+
+			if(type == 1){
+
+				this.WhitePieces[id].setType(-1);
+
+				this.gameBoard[currentRowLeft][currentColDown].splice(0,1);
+
+			} else if (type == 0){
+
+				this.BlackPieces[id].setType(-1);
+
+				this.gameBoard[currentRowLeft][currentColDown].splice(0,1);
+
+
+			}
 			console.log("Can conquer to lowerLeft!");
 			
 		}
@@ -351,10 +398,134 @@ GameState.prototype.checkIfCanConquer = function (){
 		}
 		
 	}
+
+}
+
+GameState.prototype.checkIfCanConquerLowerRight = function (){
+	var currentRow = this.selectedPiece.getRow();
+	var currentCol = this.selectedPiece.getCol();
+	var typePiece = this.selectedPiece.getType();
+
+	
+
+	var currentRowRight = currentRow + 1;
+	var currentColDown = currentCol + 1;
+
+	var currentRowRightProtection = currentRow + 2;
+	var currentColDownProtection = currentCol + 2;
+
+
+	if (currentRowRight > 7 || currentRowRight < 0){
+		return;
+	}
+
+	if (currentColDown > 7 || currentColDown < 0){
+		return;
+	}
+
+	if (currentRowRightProtection > 7 || currentRowRightProtection < 0){
+		return;
+	}
+
+	if (currentColDownProtection > 7 || currentColDownProtection < 0){
+		return;
+	}
+
+	var lowerRight = this.gameBoard[currentRow + 1][currentCol + 1];
+	var lowerRightProtection = this.gameBoard[currentRow + 2][currentCol + 2];
+
+		// check LowerRight
+
+	if(lowerRight.length != 0 && lowerRight[0].type != typePiece)
+	{
+		if(lowerRightProtection == 0){
+
+			var id = this.gameBoard[currentRowRight][currentColDown][0].id;
+			var type = this.gameBoard[currentRowRight][currentColDown][0].type;
+
+			if(type == 1){
+
+				this.WhitePieces[id].setType(-1);
+
+				this.gameBoard[currentRowRight][currentColDown].splice(0,1);
+
+			} else if (type == 0){
+
+				this.BlackPieces[id].setType(-1);
+
+				this.gameBoard[currentRowRight][currentColDown].splice(0,1);
+
+
+			}
+			console.log("Can conquer to lowerRight!");
+			
+		}
+
+		else
+		{
+			console.log("Can't conquer to lowerLeft!");
+			
+		}
+		
+	}
+
+
+}
+
+
+GameState.prototype.checkIfCanConquerUpperRight = function (){
+	var currentRow = this.selectedPiece.getRow();
+	var currentCol = this.selectedPiece.getCol();
+	var typePiece = this.selectedPiece.getType();
+
+	var currentRowRight = currentRow + 1;
+	var currentColUp = currentCol - 1;
+
+	var currentRowRightProtection = currentRow + 2;
+	var currentColUpProtection = currentCol - 2;
+
+	if (currentRowRight > 7 || currentRowRight < 0){
+		return;
+	}
+
+	if (currentColUp < 0 || currentColUp > 7){
+		return;
+	}
+
+	if (currentRowRightProtection > 7 || currentRowRightProtection < 0){
+		return;
+	}
+
+	if (currentColUpProtection < 0 || currentColUpProtection > 7){
+		return;
+	}
+
+	var upperRight = this.gameBoard[currentRow + 1][currentCol - 1];
+	var upperRightProtection = this.gameBoard[currentRow + 2][currentCol - 2];
+
 	// check UpperRight
-	else if(upperRight.length != 0 && upperRight[0].type != typePiece)
+
+	 if(upperRight.length != 0 && upperRight[0].type != typePiece)
 	{
 		if(upperRightProtection == 0){
+
+			var id = this.gameBoard[currentRowRight][currentColUp][0].id;
+			var type = this.gameBoard[currentRowRight][currentColUp][0].type;
+
+			if(type == 1){
+
+				this.WhitePieces[id].setType(-1);
+
+				this.gameBoard[currentRowRight][currentColUp].splice(0,1);
+
+			} else if (type == 0){
+
+				this.BlackPieces[id].setType(-1);
+
+				this.gameBoard[currentRowRight][currentColUp].splice(0,1);
+
+
+			}
 			console.log("Can conquer to upperRight!");
 	
 		}
@@ -366,10 +537,67 @@ GameState.prototype.checkIfCanConquer = function (){
 		}
 		
 	}
+
+
+}
+
+GameState.prototype.checkIfCanConquerUpperLeft = function (){
+	var currentRow = this.selectedPiece.getRow();
+	var currentCol = this.selectedPiece.getCol();
+	var typePiece = this.selectedPiece.getType();
+
+	
+
+	var currentRowLeft = currentRow - 1;
+	var currentColUp = currentCol - 1;
+
+	var currentRowLeftProtection = currentRow - 2;
+	var currentColUpProtection = currentCol - 2;
+
+
+	if (currentRowLeft < 0 || currentRowLeft > 7 ){
+		return;
+	}
+
+	if (currentColUp < 0 || currentColUp > 7){
+		return;
+	}
+
+	if (currentRowLeftProtection < 0 || currentRowLeftProtection > 7 ){
+		return;
+	}
+
+	if (currentColUpProtection < 0 || currentColUpProtection > 7){
+		return;
+	}
+
+	var upperLeft = this.gameBoard[currentRow - 1][currentCol - 1];
+	var upperLeftProtection = this.gameBoard[currentRow - 2][currentCol - 2];
+	
 	// check UpperLeft
-	else if (upperLeft.length != 0 && upperLeft[0].type != typePiece)
+
+	if (upperLeft.length != 0 && upperLeft[0].type != typePiece)
 	{
 		if(upperLeftProtection == 0){
+			
+			var id = this.gameBoard[currentRowLeft][currentColUp][0].id;
+			var type = this.gameBoard[currentRowLeft][currentColUp][0].type;
+
+			if(type == 1){
+
+				this.WhitePieces[id].setType(-1);
+
+				this.gameBoard[currentRowLeft][currentColUp].splice(0,1);
+
+			} else if (type == 0){
+
+				this.BlackPieces[id].setType(-1);
+
+				this.gameBoard[currentRowLeft][currentColUp].splice(0,1);
+
+
+			}
+
 			console.log("Can conquer to upperLeft!");
 		}
 		else
