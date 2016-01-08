@@ -103,8 +103,8 @@ GameState.prototype.logic = function () {
       case 3:
         console.log("<--- Moving Piece --->");
         if (this.checkIfTheMoveIsPossible()){
-        //this.promotePiece();
         this.movePiece();
+        this.checkIfCanConquer();
         this.checkIfPromotionAvailable();
         this.state = 1;
   	  }
@@ -298,6 +298,86 @@ GameState.prototype.checkIfPromotionAvailable = function (){
    }
 
 
+}
+
+GameState.prototype.checkIfCanConquer = function (){
+	var currentRow = this.selectedPiece.getRow();
+	var currentCol = this.selectedPiece.getCol();
+	var typePiece = this.selectedPiece.getType();
+
+	// check LowerRight
+
+	var lowerRight = this.gameBoard[currentRow - 1][currentCol - 1];
+	var lowerRightProtection = this.gameBoard[currentRow - 2][currentCol - 2];
+
+	var lowerLeft = this.gameBoard[currentRow - 1][currentCol + 1];
+	var lowerLeftProtection = this.gameBoard[currentRow - 2][currentCol + 2];
+
+	var upperRight = this.gameBoard[currentRow + 1][currentCol + 1];
+	var upperRightProtection = this.gameBoard[currentRow + 2][currentCol + 2];
+
+	var upperLeft = this.gameBoard[currentRow + 1][currentCol - 1];
+	var upperLeftProtection = this.gameBoard[currentRow + 2][currentCol + 2];
+
+
+	
+
+	if(lowerRight.length != 0 && lowerRight[0].type != typePiece)
+	{
+		if(lowerRightProtection == 0){
+			console.log("Can conquer to lowerRight!");
+			
+		}
+
+		else
+		{
+			console.log("Can't conquer to lowerLeft!");
+			
+		}
+		
+	}
+	// check LowerLeft
+	else if(lowerLeft.length != 0 && lowerLeft[0].type != typePiece)
+	{
+		if(lowerLeftProtection == 0){
+			console.log("Can conquer to lowerLeft!");
+			
+		}
+
+		else
+		{
+			console.log("Can't conquer to lowerLeft!");
+			
+		}
+		
+	}
+	// check UpperRight
+	else if(upperRight.length != 0 && upperRight[0].type != typePiece)
+	{
+		if(upperRightProtection == 0){
+			console.log("Can conquer to upperRight!");
+	
+		}
+
+		else
+		{
+			console.log("Can't conquer to upperRight!");
+	
+		}
+		
+	}
+	// check UpperLeft
+	else if (upperLeft.length != 0 && upperLeft[0].type != typePiece)
+	{
+		if(upperLeftProtection == 0){
+			console.log("Can conquer to upperLeft!");
+		}
+		else
+		{
+			console.log("Can't conquer to upperLeft!");
+		}
+	
+	}
 }
 
 
