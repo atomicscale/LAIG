@@ -2,17 +2,17 @@
  
 <INITIALS>
     <frustum near="0.1" far="250"/>                
-    <translation x="-1" y="1" z="0" />              
+    <translation x="-1" y="-5" z="5" />              
     <rotation axis="x" angle="0" />                
-    <rotation axis="y" angle="0" />                
+    <rotation axis="y" angle="-180" />                
     <rotation axis="z" angle="0" />                
     <scale sx="0.25" sy="0.25" sz="0.25" />        
-    <reference length="5" />                        
+    <reference length="0" />                        
 </INITIALS>
  
 <ILLUMINATION>
     <ambient r="0.2" g="0.2" b="0.2" a="1.0" />                                  
-    <background r="0" g="0" b="0" a="1" />        
+    <background r="0.203" g="0.8" b="1" a="1" />        
 </ILLUMINATION>
  
 <LIGHTS>
@@ -54,15 +54,21 @@
     </TEXTURE>
 
     <TEXTURE id="sky">
-        <file path="textures/sky.jpg" />                          
-        <amplif_factor s="1" t="1" />
+        <file path="textures/skyz.jpg" />                          
+        <amplif_factor s="5" t="5" />
     </TEXTURE>
  
     <!--Floor-->
     <TEXTURE id="road">
-        <file path="textures/estrada.jpg" />
-        <amplif_factor s="1" t="1" />
+        <file path="textures/estradaz.jpg" />
+        <amplif_factor s="5" t="4" />
     </TEXTURE>
+
+    <TEXTURE id="landing">
+        <file path="textures/roadz.jpg" />
+        <amplif_factor s="5" t="4" />
+    </TEXTURE>
+
 </TEXTURES>
  
 <MATERIALS>
@@ -103,31 +109,31 @@
         <TEXTURE id="null" />                
  
         <DESCENDANTS>
-            <DESCENDANT id="estrada" />
             <DESCENDANT id="aviao" />
-            <DESCENDANT id="paisagem"/>
+            <DESCENDANT id="estrada" />
+            <DESCENDANT id="landing" />
         </DESCENDANTS>
     </NODE>
    
-		<NODE id="paisagem">      
-        <MATERIAL id="defaultMaterial" />      
-        <TEXTURE id="sky" /> 
-
-        <SCALE sx="1" sy="100" sz="100" />
-        <TRANSLATION x="0.2" y="-1" z="4" /> 
-        <ROTATION axis="y" angle="90" />        
- 
-        <DESCENDANTS>
-            <DESCENDANT id="rectangulo" />
-        </DESCENDANTS>
-    </NODE>
-
     <NODE id="estrada">      
         <MATERIAL id="null" />    
         <TEXTURE id="road" />                  
  
-        <SCALE sx="40" sy="1" sz="40" />
-        <TRANSLATION x="0.2" y="-4" z="2.5" />
+        <SCALE sx="500" sy="1" sz="100" />
+        <TRANSLATION x="-4" y="-4" z="2.5" />
+        <ROTATION axis="x" angle="-90" />
+ 
+        <DESCENDANTS>
+            <DESCENDANT id="rectangulo" />              
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="landing">      
+        <MATERIAL id="null" />    
+        <TEXTURE id="landing" />                  
+ 
+        <SCALE sx="400" sy="1" sz="10" />
+        <TRANSLATION x="-4" y="-3" z="4" />
         <ROTATION axis="x" angle="-90" />
  
         <DESCENDANTS>
@@ -138,7 +144,9 @@
     <NODE id="aviao">      
         <MATERIAL id="null" />    
         <TEXTURE id="null" />
- 
+
+ 		<TRANSLATION x="20" y="10" z="0" />
+
         <DESCENDANTS>
             <DESCENDANT id="parteSup" />
             <DESCENDANT id="parteInf" />                    

@@ -40,7 +40,7 @@ function LSXInitials() {
     };
 
     this.setReference = function(data){
-        this.reference = data.lenght;
+        this.reference = data.length;
         this.defaultValues = false;
     };
 
