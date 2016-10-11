@@ -16,7 +16,7 @@
 </ILLUMINATION>
  
 <LIGHTS>
-    <LIGHT id="LightA">                                    
+    <LIGHT id="Left Wing">                                    
         <enable value="true" />                        
         <position x="8.0" y="-4" z="8.0" w="1.0" />      
         <ambient r="0.4" g="0.4" b="0.4" a="1.0" />        
@@ -24,7 +24,7 @@
         <specular r="0.7" g="0.7" b="0.7" a="1.0" />      
     </LIGHT>
  
-    <LIGHT id="LightB">                                    
+    <LIGHT id="Right Wing">                                    
         <enable value="true" />                        
         <position x="4.0" y="-4" z="5.5" w="0.0" />      
         <ambient r="0.3" g="0.3" b="0.3" a="1.0" />        
@@ -32,7 +32,7 @@
         <specular r="0.9" g="0.9" b="0.9" a="0.9" />      
     </LIGHT>
  
-    <LIGHT id="LightC">                                    
+    <LIGHT id="Sky">                                    
         <enable value="true" />                        
         <position x="4.5" y="-4" z="11.0" w="0.0" />      
         <ambient r="0.4" g="0.4" b="0.4" a="1.0" />        
