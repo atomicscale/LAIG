@@ -36,7 +36,7 @@ Interface.prototype.setScene = function(scene) {
  */
 Interface.prototype.initLights = function() {
     var lights_group = this.gui.addFolder("Lights");
-    lights_group.open();
+    lights_group.close();
 
     var self = this;
 
