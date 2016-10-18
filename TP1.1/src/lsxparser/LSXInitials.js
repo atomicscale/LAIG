@@ -1,4 +1,4 @@
-function LSXInitials() {
+function DSXviews() {
     this.frustum = {
         near: 0.0,
         far: 0.0

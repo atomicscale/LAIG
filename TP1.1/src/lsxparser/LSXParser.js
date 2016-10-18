@@ -67,7 +67,7 @@ LSXParser.prototype.parseCamera = function(element) {
     var cameraStruct = {
         element:{
             data: element.getElementsByTagName('INITIALS')[0],
-            error: "INITIALS element is missing."
+            error: "views are missing."
         },
         components:{
             frustum:{
@@ -204,11 +204,11 @@ LSXParser.prototype.parseTextures = function(element) {
 
     var texturesStruct = {
         element: {
-            data: element.getElementsByTagName('TEXTURES')[0],
-            error: "<TEXTURES> element is missing."
+            data: element.getElementsByTagName('textures')[0],
+            error: "<textures> element is missing."
         },
         textures: {
-            data: element.getElementsByTagName('TEXTURES')[0].getElementsByTagName('TEXTURE')
+            data: element.getElementsByTagName('textures')[0].getElementsByTagName('texture')
         }
 
     };
@@ -269,8 +269,8 @@ LSXParser.prototype.parseMaterials = function(element) {
 LSXParser.prototype.parseLeaves = function(element) {
     var leavesStruct = {
         element: {
-            data: element.getElementsByTagName('LEAVES')[0],
-            error: "<LEAVES> element is missing."
+            data: element.getElementsByTagName('primitives')[0],
+            error: "<primitives> element is missing."
         },
         shapes:{
             rectangle:{
