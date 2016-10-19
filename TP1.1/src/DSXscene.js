@@ -1,13 +1,13 @@
 var deg2rad = Math.PI / 180;
 
-function LSXscene() {
+function DSXscene() {
     CGFscene.call(this);
 }
 
-LSXscene.prototype = Object.create(CGFscene.prototype);
-LSXscene.prototype.constructor = LSXscene;
+DSXscene.prototype = Object.create(CGFscene.prototype);
+DSXscene.prototype.constructor = DSXscene;
 
-LSXscene.prototype.init = function(application) {
+DSXscene.prototype.init = function(application) {
     CGFscene.prototype.init.call(this, application);
 
     this.initCameras();
@@ -27,7 +27,7 @@ LSXscene.prototype.init = function(application) {
     this.axis = new CGFaxis(this);
 };
 
-LSXscene.prototype.initCameras = function() {
+DSXscene.prototype.initCameras = function() {
     this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(50, 10, 10), vec3.fromValues(0, 0, 0));
 };
 
@@ -35,7 +35,7 @@ LSXscene.prototype.initCameras = function() {
  * Sets the default scene appearance based on an material named "default"
  * if it is present in the .lsx scene file
  */
-LSXscene.prototype.setDefaultAppearance = function() {
+DSXscene.prototype.setDefaultAppearance = function() {
     for (var i = 0; i < this.materials.length; i++) {
         if (this.materials[i].id == "default") {
             this.materials[i].apply();
@@ -48,7 +48,7 @@ LSXscene.prototype.setDefaultAppearance = function() {
  * Function called by a {LSXParser} once it is done parsing
  * a scene in .lsx format
  */
-LSXscene.prototype.onGraphLoaded = function() {
+DSXscene.prototype.onGraphLoaded = function() {
     // Frustum
     this.camera.near = this.graph.config.camera.frustum.near;
     this.camera.far = this.graph.config.camera.frustum.far;
@@ -96,7 +96,7 @@ LSXscene.prototype.onGraphLoaded = function() {
     this.initNodes();
 };
 
-LSXscene.prototype.display = function() {
+DSXscene.prototype.display = function() {
     this.shader.bind();
     this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
@@ -133,7 +133,7 @@ LSXscene.prototype.display = function() {
 /**
  * Apply the initial transformations defined in <INITIALS>
  */
-LSXscene.prototype.applyInitials = function() {
+DSXscene.prototype.applyInitials = function() {
     var inits = this.graph.config.camera;
     var trans = inits.translation;
     var scale = inits.scale;
@@ -159,7 +159,7 @@ LSXscene.prototype.applyInitials = function() {
 /**
  * Adds lights to scene defined in <LIGHTS>
  */
-LSXscene.prototype.initLights = function() {
+DSXscene.prototype.initLights = function() {
     this.shader.bind();
 
     this.lights = [];
@@ -191,28 +191,28 @@ LSXscene.prototype.initLights = function() {
 /**
  * Adds leaves (primitives) defined in <LEAVES>
  */
-LSXscene.prototype.initLeaves = function() {
-    for (var i = 0; i < this.graph.config.XML.parsedTree.leaves.length; i++) {
-        var leaf = this.graph.config.XML.parsedTree.leaves[i];
-        switch (leaf.type) {
+DSXscene.prototype.primitives = function() {
+    for (var i = 0; i < this.graph.config.XML.parsedTree.primitives.length; i++) {
+        var primitives = this.graph.config.XML.parsedTree.primitives[i];
+        switch (primitives.type) {
             case "rectangle":
-                var primitive = new MyQuad(this, leaf.args);
-                primitive.id = leaf.id;
+                var primitive = new MyQuad(this, primitives.args);
+                primitive.id = primitives.id;
                 this.leaves.push(primitive);
                 break;
             case "cylinder":
                 primitive = new MyFullCylinder(this, leaf.args);
-                primitive.id = leaf.id;
+                primitive.id = primitives.id;
                 this.leaves.push(primitive);
                 break;
             case "sphere":
-                primitive = new MySphere(this, leaf.args);
-                primitive.id = leaf.id;
+                primitive = new MySphere(this, primitives.args);
+                primitive.id = primitives.id;
                 this.leaves.push(primitive);
                 break;
             case "triangle":
-                primitive = new MyTriangle(this, leaf.args);
-                primitive.id = leaf.id;
+                primitive = new MyTriangle(this, primitives.args);
+                primitive.id = primitives.id;
                 this.leaves.push(primitive);
                 break;
         }
@@ -227,14 +227,14 @@ LSXscene.prototype.initLeaves = function() {
  * a {SceneObject} based on the transformations and materials/textures
  * defined in previous nodes and the primitive which the leaf represents
  */
-LSXscene.prototype.initNodes = function() {
+DSXscene.prototype.initNodes = function() {
     var nodes_list = this.graph.config.XML.parsedTree.nodes;
 
     var root_node = this.graph.findNode(this.graph.config.XML.parsedTree.root_id);
     this.DFS(root_node, root_node.material, root_node.texture, root_node.matrix);
 };
 
-LSXscene.prototype.DFS = function(node, currMaterial, currTexture, currMatrix) {
+DSXscene.prototype.DFS = function(node, currMaterial, currTexture, currMatrix) {
     var nextMat = node.material;
     if (node.material == "null") nextMat = currMaterial;
 
@@ -271,7 +271,7 @@ LSXscene.prototype.DFS = function(node, currMaterial, currTexture, currMatrix) {
 /**
  * @returns {SceneMaterial} with the {string} id specified
  */
-LSXscene.prototype.getMaterial = function(id) {
+DSXscene.prototype.getMaterial = function(id) {
     if (id == null) return null;
 
     for (var i = 0; i < this.materials.length; i++)
@@ -283,7 +283,7 @@ LSXscene.prototype.getMaterial = function(id) {
 /**
  * @returns {SceneTexture} with the {string} id specified
  */
-LSXscene.prototype.getTexture = function(id) {
+DSXscene.prototype.getTexture = function(id) {
     if (id == null) return null;
 
     for (var i = 0; i < this.textures.length; i++)
@@ -296,7 +296,7 @@ LSXscene.prototype.getTexture = function(id) {
  * Called from interface when a button is pressed
  * Switches light on or off
  */
-LSXscene.prototype.switchLight = function(id, _switch) {
+DSXscene.prototype.switchLight = function(id, _switch) {
     for (var i = 0; i < this.lights.length; ++i) {
         if (id == this.lights[i].id) {
             _switch ? this.lights[i].enable() : this.lights[i].disable();

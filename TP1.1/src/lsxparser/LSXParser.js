@@ -1,4 +1,4 @@
-function LSXParser(filename, _scene) {
+function DSXParser(filename, _scene) {
 
     _scene.graph = this;
 
@@ -27,7 +27,7 @@ function LSXParser(filename, _scene) {
     this.config.XML.data.open(this.config.XML.path, this);
 }
 
-LSXParser.prototype.onXMLReady = function() {
+DSXParser.prototype.onXMLReady = function() {
 
     this.SuccessMSG("LSX loaded");
 
@@ -62,7 +62,7 @@ LSXParser.prototype.onXMLReady = function() {
 
 
 
-LSXParser.prototype.parseCamera = function(element) {
+DSXParser.prototype.parseCamera = function(element) {
 
     var cameraStruct = {
         element:{
@@ -129,7 +129,7 @@ LSXParser.prototype.parseCamera = function(element) {
     return null;
 };
 
-LSXParser.prototype.parseIllumination = function(element) {
+DSXParser.prototype.parseIllumination = function(element) {
 
     var illuminationStruct = {
         element: {
@@ -163,7 +163,7 @@ LSXParser.prototype.parseIllumination = function(element) {
 
 
 
-LSXParser.prototype.parseLights = function(element) {
+DSXParser.prototype.parseLights = function(element) {
 
     var lightsStruct = {
         element: {
@@ -200,7 +200,7 @@ LSXParser.prototype.parseLights = function(element) {
     return null;
 };
 
-LSXParser.prototype.parseTextures = function(element) {
+DSXParser.prototype.parseTextures = function(element) {
 
     var texturesStruct = {
         element: {
@@ -234,15 +234,15 @@ LSXParser.prototype.parseTextures = function(element) {
     return null;
 };
 
-LSXParser.prototype.parseMaterials = function(element) {
+DSXParser.prototype.parseMaterials = function(element) {
 
     var materialsStruct = {
         element: {
-            data: element.getElementsByTagName('MATERIALS')[0],
-            error: "<MATERIALS> element is missing."
+            data: element.getElementsByTagName('materials')[0],
+            error: "<materials> element is missing."
         },
         materials: {
-            data: element.getElementsByTagName('MATERIALS')[0].getElementsByTagName('MATERIAL')
+            data: element.getElementsByTagName('materials')[0].getElementsByTagName('material')
         }
 
     };
@@ -266,7 +266,7 @@ LSXParser.prototype.parseMaterials = function(element) {
     return null;
 };
 
-LSXParser.prototype.parseLeaves = function(element) {
+DSXParser.prototype.parseLeaves = function(element) {
     var leavesStruct = {
         element: {
             data: element.getElementsByTagName('primitives')[0],
@@ -346,7 +346,7 @@ LSXParser.prototype.parseLeaves = function(element) {
     return null;
 };
 
-LSXParser.prototype.parseNodes = function(element) {
+DSXParser.prototype.parseNodes = function(element) {
 
     var nodesStruct = {
         element: {
@@ -432,7 +432,7 @@ LSXParser.prototype.parseNodes = function(element) {
     return null;
 };
 
-LSXParser.prototype.parseColor = function(element) {
+DSXParser.prototype.parseColor = function(element) {
     var color = {};
     color.r = this.config.XML.data.getFloat(element, 'r');
     color.g = this.config.XML.data.getFloat(element, 'g');
@@ -440,7 +440,7 @@ LSXParser.prototype.parseColor = function(element) {
     color.a = this.config.XML.data.getFloat(element, 'a');
     return color;
 };
-LSXParser.prototype.findNode = function(id) {
+DSXParser.prototype.findNode = function(id) {
     for (i = 0; i < this.config.XML.parsedTree.nodes.length; i++)
         if (this.config.XML.parsedTree.nodes[i].id == id) return this.config.XML.parsedTree.nodes[i];
 
@@ -450,8 +450,8 @@ LSXParser.prototype.findNode = function(id) {
 function printColor(c) {
     return "(" + c.r + ", " + c.g + ", " + c.b + ", " + c.a + ")";
 }
-
-LSXParser.prototype.validateObject = function(data){
+DSXParser
+DSXParser.prototype.validateObject = function(data){
     if (data == null){ 
         console.log(data.error);
         return 0;
@@ -460,9 +460,9 @@ LSXParser.prototype.validateObject = function(data){
         return 1;
 }
 
-LSXParser.prototype.SuccessMSG = function(message){
+DSXParser.prototype.SuccessMSG = function(message){
     console.log("Operation succeeded. " + message);
 }
-LSXParser.prototype.onXMLError = function(message) {
+DSXParser.prototype.onXMLError = function(message) {
     console.error("Operation failed.\nError: " + message);
 };
