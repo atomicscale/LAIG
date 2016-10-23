@@ -29,7 +29,7 @@ function DSXParser(filename, _scene) {
 
 DSXParser.prototype.onXMLReady = function() {
 
-    this.SuccessMSG("LSX loaded");
+    this.SuccessMSG("DSX loaded");
 
     var tempInfo = {
         "element": this.config.XML.data.xmlDoc.documentElement,
@@ -218,14 +218,13 @@ DSXParser.prototype.parseTextures = function(element) {
 
 
     for (var i = 0; i < texturesStruct.textures.data.length; i++) {
-        var texture = new LSXTexture(texturesStruct.textures.data[i].getAttribute('id'));
+        var texture = new DSXTexture(texturesStruct.textures.data[i].getAttribute('id'));
 
-        var relpath = texturesStruct.textures.data[i].getElementsByTagName('file')[0].getAttribute('path');
+        var relpath = texturesStruct.textures.data[i].getAttribute('file');
         texture.path = this.config.textures_path + relpath;
 
-        var aux = texturesStruct.textures.data[i].getElementsByTagName('amplif_factor')[0];
-        texture.amplif_factor.s = this.config.XML.data.getFloat(aux, 's');
-        texture.amplif_factor.t = this.config.XML.data.getFloat(aux, 't');
+        texture.leng.s = texturesStruct.textures.data[i].getAttribute('length_s');
+        texture.leng.t = texturesStruct.textures.data[i].getAttribute('length_t');
 
         texture.info();
         this.config.textures.push(texture);
@@ -315,7 +314,7 @@ DSXParser.prototype.parseLeaves = function(element) {
             }
         },
         leaves: {
-            data: element.getElementsByTagName('LEAVES')[0].getElementsByTagName('LEAF')
+            data: element.getElementsByTagName('primitives')[0].getElementsByTagName('primitive')
         }
 
     };
@@ -397,8 +396,9 @@ DSXParser.prototype.parseNodes = function(element) {
 
     for (var i = 0; i < nodesStruct.nodes.data.length; i++) {
         var node = new LSXNode(nodesStruct.nodes.data[i].getAttribute('id'));
-        node.material = this.config.XML.data.getString(nodesStruct.nodes.data[i].getElementsByTagName('MATERIAL')[0], 'id');
-        node.texture = this.config.XML.data.getString(nodesStruct.nodes.data[i].getElementsByTagName('TEXTURE')[0], 'id');
+        node.material = this.config.XML.data.getString(nodesStruct.nodes.data[i].getElementsByTagName('material')[0], 'id');
+        node.texture = this.config.XML.data.getString(nodesStruct.nodes.data[i].getElementsByTagName('texture')[0], 'id');
+
 
         // Transforms
         var children = nodesStruct.nodes.data[i].children;

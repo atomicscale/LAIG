@@ -49,8 +49,8 @@ serialInclude(['../lib/CGF.js',
     'lsxparser/LSXLight.js',
     'lsxparser/LSXMaterial.js',
     'lsxparser/LSXNode.js',
-    'lsxparser/LSXTexture.js',
-    'lsxparser/LSXParser.js',
+    'lsxparser/DSXTexture.js',
+    'lsxparser/DSXParser.js',
 
     'primitives/MyCircle.js',
     'primitives/MyCylinder.js',
@@ -62,12 +62,12 @@ serialInclude(['../lib/CGF.js',
     'lsxscene/SceneMaterial.js',
     'lsxscene/SceneTexture.js',
     'lsxscene/SceneObject.js',
-    'LSXscene.js',
+    'DSXscene.js',
     'Interface.js',
 
     main = function() {
         var app = new CGFapplication(document.body);
-        var myScene = new LSXscene();
+        var myScene = new DSXscene();
         var myInterface = new Interface();
         myInterface.setScene(myScene);
 
@@ -80,7 +80,7 @@ serialInclude(['../lib/CGF.js',
 
         var filename = getUrlVars()['file'] || "scene1/LAIG_TP1_LSX_T01_G11_v1.lsx";
 
-        var myGraph = new LSXParser(filename, myScene);
+        var myGraph = new DSXParser(filename, myScene);
 
         app.run();
     }

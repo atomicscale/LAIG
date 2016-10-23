@@ -11,7 +11,7 @@ SceneObject.prototype.updateTex = function() {
 
     if (this.texture == null) return;
 
-    this.primitive.updateTex(this.texture.amplif_factor.s, this.texture.amplif_factor.t);
+    this.primitive.updateTex(this.texture.leng.s, this.texture.leng.t);
 };
 
 SceneObject.prototype.draw = function(scene) {

@@ -71,7 +71,7 @@ DSXscene.prototype.onGraphLoaded = function() {
 
     var text = this.graph.config.textures;
     for (var i = 0; i < text.length; i++) {
-        var aux = new SceneTexture(this, text[i].id, text[i].path, text[i].amplif_factor);
+        var aux = new SceneTexture(this, text[i].id, text[i].path, text[i].leng);
 
         this.textures.push(aux);
     }
@@ -97,7 +97,7 @@ DSXscene.prototype.onGraphLoaded = function() {
 };
 
 DSXscene.prototype.display = function() {
-    this.shader.bind();
+    //this.shader.bind();
     this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
@@ -127,7 +127,7 @@ DSXscene.prototype.display = function() {
         }
     }
 
-    this.shader.unbind();
+    //this.shader.unbind();
 };
 
 /**
@@ -160,7 +160,7 @@ DSXscene.prototype.applyInitials = function() {
  * Adds lights to scene defined in <LIGHTS>
  */
 DSXscene.prototype.initLights = function() {
-    this.shader.bind();
+    //this.shader.bind();
 
     this.lights = [];
     this.lightsID = [];
@@ -182,7 +182,7 @@ DSXscene.prototype.initLights = function() {
         this.lightsID[l.id] = l.enabled;
     }
 
-    this.shader.unbind();
+    //this.shader.unbind();
 
     this.interface.initLights();
 
@@ -191,28 +191,28 @@ DSXscene.prototype.initLights = function() {
 /**
  * Adds leaves (primitives) defined in <LEAVES>
  */
-DSXscene.prototype.primitives = function() {
-    for (var i = 0; i < this.graph.config.XML.parsedTree.primitives.length; i++) {
-        var primitives = this.graph.config.XML.parsedTree.primitives[i];
-        switch (primitives.type) {
+DSXscene.prototype.initLeaves = function() {
+for (var i = 0; i < this.graph.config.XML.parsedTree.leaves.length; i++) {
+        var leaf = this.graph.config.XML.parsedTree.leaves[i];
+        switch (leaf.type) {
             case "rectangle":
-                var primitive = new MyQuad(this, primitives.args);
-                primitive.id = primitives.id;
+                var primitive = new MyQuad(this, leaf.args);
+                primitive.id = leaf.id;
                 this.leaves.push(primitive);
                 break;
             case "cylinder":
                 primitive = new MyFullCylinder(this, leaf.args);
-                primitive.id = primitives.id;
+                primitive.id = leaf.id;
                 this.leaves.push(primitive);
                 break;
             case "sphere":
-                primitive = new MySphere(this, primitives.args);
-                primitive.id = primitives.id;
+                primitive = new MySphere(this, leaf.args);
+                primitive.id = leaf.id;
                 this.leaves.push(primitive);
                 break;
             case "triangle":
-                primitive = new MyTriangle(this, primitives.args);
-                primitive.id = primitives.id;
+                primitive = new MyTriangle(this, leaf.args);
+                primitive.id = leaf.id;
                 this.leaves.push(primitive);
                 break;
         }
@@ -239,6 +239,7 @@ DSXscene.prototype.DFS = function(node, currMaterial, currTexture, currMatrix) {
     if (node.material == "null") nextMat = currMaterial;
 
     var nextTex = node.texture;
+
     if (node.texture == "null") nextTex = currTexture;
     else if (node.texture == "clear") nextTex = null;
 
