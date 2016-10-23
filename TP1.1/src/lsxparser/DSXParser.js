@@ -133,19 +133,28 @@ DSXParser.prototype.parseIllumination = function(element) {
 
     var illuminationStruct = {
         element: {
-            data: element.getElementsByTagName('ILLUMINATION')[0],
-            error: 'ILLUMINATION element is missing.'
+            data: element.getElementsByTagName('illumination')[0],
+            error: 'illumination element is missing.'
         },
         components: {
             ambient:{
-                data: (element.getElementsByTagName('ILLUMINATION')[0]).getElementsByTagName('ambient')[0],
+                data: (element.getElementsByTagName('illumination')[0]).getElementsByTagName('ambient')[0],
                 error: 'ambient element is missing'
             },
             background:{
-                data: (element.getElementsByTagName('ILLUMINATION')[0]).getElementsByTagName('background')[0],
+                data: (element.getElementsByTagName('illumination')[0]).getElementsByTagName('background')[0],
                 error: 'background element is missing'
+            },
+            doublesided:{
+                data:(element.getElementsByTagName('illumination')[0]).getAttribute('doublesided'),
+                error:'doublesided element is missing'
+            },
+            doublesided:{
+                data:(element.getElementsByTagName('illumination')[0]).getAttribute('local'),
+                error:'local element is missing'
             }
         }
+
 
     };
 
@@ -349,17 +358,17 @@ DSXParser.prototype.parseNodes = function(element) {
 
     var nodesStruct = {
         element: {
-            data: element.getElementsByTagName('NODES')[0],
-            error: "<NODES> element is missing."
+            data: element.getElementsByTagName('components')[0],
+            error: "<components> element is missing."
         },
         root:{
-            data: element.getElementsByTagName('NODES')[0].getElementsByTagName('ROOT')[0]
+            data: element.getElementsByTagName('components')[0].getElementsByTagName('root')[0]
         },
         nodes:{
-            data: element.getElementsByTagName('NODES')[0].getElementsByTagName('NODE')
+            data: element.getElementsByTagName('components')[0].getElementsByTagName('component')
         },
         transforms:{
-            TRANSLATION:{
+            translate:{
                 apply: function(node, x,y,z){
                     var trans = [];
                     trans.push(x);
@@ -368,7 +377,7 @@ DSXParser.prototype.parseNodes = function(element) {
                     mat4.translate(node.matrix, node.matrix, trans);
                 }
             },
-            SCALE:{
+            scale:{
                 apply: function(node, sx, sy, sz){
                     var scale = [];
                     scale.push(sx);
@@ -377,7 +386,7 @@ DSXParser.prototype.parseNodes = function(element) {
                     mat4.scale(node.matrix, node.matrix, scale);
                 }
             },
-            ROTATION:{
+            rotate:{
                 apply: function(node, axis, angle){
                     var rot = [0, 0, 0];
                     rot[["x", "y", "z"].indexOf(axis)] = 1;
@@ -404,31 +413,33 @@ DSXParser.prototype.parseNodes = function(element) {
         var children = nodesStruct.nodes.data[i].children;
         for (var j = 0; j < children.length; j++) 
             if(nodesStruct.transforms[children[j].tagName]){
-                if(children[j].tagName == 'ROTATION')
+                if(children[j].tagName == 'rotate')
                     nodesStruct.transforms[children[j].tagName].apply(node, this.config.XML.data.getItem(children[j], "axis", ["x", "y", "z"]), (this.config.XML.data.getFloat(children[j], "angle") * deg2rad));
                 else
-                    if(children[j].tagName == 'TRANSLATION')
+                    if(children[j].tagName == 'translate')
                         nodesStruct.transforms[children[j].tagName].apply(node, this.config.XML.data.getFloat(children[j], "x"),this.config.XML.data.getFloat(children[j], "y"),this.config.XML.data.getFloat(children[j], "z"));
                     else
-                        if(children[j].tagName == 'SCALE')
+                        if(children[j].tagName == 'scale')
                             nodesStruct.transforms[children[j].tagName].apply(node, this.config.XML.data.getFloat(children[j], "sx"),this.config.XML.data.getFloat(children[j], "sy"),this.config.XML.data.getFloat(children[j], "sz"));
 
             }      
 
 
         //Descendants
-        var desc = nodesStruct.nodes.data[i].getElementsByTagName('DESCENDANTS')[0];
-        if (desc == null) return "No <DESCENDANTS> tag found";
+         var desc = nodesStruct.nodes.data[i].getElementsByTagName('children')[0];
+        if (desc == null) return "No <children> tag found";
 
-        var d_list = desc.getElementsByTagName('DESCENDANT');
-        if (d_list.length < 1) return "Need at least 1 <DESCENDANT>";
+        var d_list = desc.getElementsByTagName('primitiveref');
+        var p_list = desc.getElementsByTagName('componentref');
 
         for (var j = 0; j < d_list.length; j++) 
             node.descendants.push(d_list[j].getAttribute('id'));
+
+        for (var j = 0; j < p_list.length; j++)
+            node.descendants.push(p_list[j].getAttribute('id'));
         
         this.config.XML.parsedTree.nodes.push(node);
     }
-
     return null;
 };
 

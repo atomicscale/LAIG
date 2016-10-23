@@ -10,10 +10,10 @@
     <reference length="0" />                        
 </INITIALS>
  
-<ILLUMINATION>
+<illumination doublesided="1" local="1">
     <ambient r="0.2" g="0.2" b="0.2" a="1.0" />                                  
     <background r="0.203" g="0.8" b="1" a="1" />        
-</ILLUMINATION>
+</illumination>
  
 <LIGHTS>
     <LIGHT id="Left Wing">                                    
@@ -82,426 +82,431 @@
 
 </primitives>
  
-<NODES>
+<components>
  
-    <ROOT id="main" />    
+    <root id="main" />    
  
-    <NODE id="main">      
+    <component id="main">      
         <material id="defaultmaterial" />      
         <texture id="null" />                
  
-        <DESCENDANTS>
-            <DESCENDANT id="aviao" />
-            <DESCENDANT id="estrada" />
-            <DESCENDANT id="landing" />
-        </DESCENDANTS>
-    </NODE>
+        <children>
+
+                <!-- deve existir uma ou mais tags "componentref" e/ou -->
+                <!-- "componentref", identificando outros -->
+                <!-- componentes ou primitivas -->
+                <componentref id="estrada" />              
+                <componentref id="landing" />
+                <componentref id="aviao" /> 
+
+        </children>
+    </component>
    
-    <NODE id="estrada">      
+    <component id="estrada">      
         <material id="null" />    
         <texture id="road" />                  
  
-        <SCALE sx="500" sy="1" sz="100" />
-        <TRANSLATION x="-4" y="-4" z="2.5" />
-        <ROTATION axis="x" angle="-90" />
+        <scale sx="500" sy="1" sz="100" />
+        <translate x="-4" y="-4" z="2.5" />
+        <rotate axis="x" angle="-90" />
  
-        <DESCENDANTS>
-            <DESCENDANT id="rectangulo" />              
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <primitiveref id="rectangulo" />              
+        </children>
+    </component>
 
-    <NODE id="landing">      
+    <component id="landing">      
         <material id="null" />    
         <texture id="landing" />                  
  
-        <SCALE sx="400" sy="1" sz="10" />
-        <TRANSLATION x="-4" y="-3" z="4" />
-        <ROTATION axis="x" angle="-90" />
+        <scale sx="400" sy="1" sz="10" />
+        <translate x="-4" y="-3" z="4" />
+        <rotate axis="x" angle="-90" />
  
-        <DESCENDANTS>
-            <DESCENDANT id="rectangulo" />              
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <primitiveref id="rectangulo" />              
+        </children>
+    </component>
  
-    <NODE id="aviao">      
+    <component id="aviao">      
         <material id="null" />    
         <texture id="null" />
 
- 		<TRANSLATION x="20" y="10" z="0" />
+ 		<translate x="20" y="10" z="0" />
 
-        <DESCENDANTS>
-            <DESCENDANT id="parteSup" />
-            <DESCENDANT id="parteInf" />                    
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <componentref id="parteSup" />
+            <componentref id="parteInf" />                    
+        </children>
+    </component>
 
    
  
-    <NODE id="parteInf">      
+    <component id="parteInf">      
         <material id="null" />    
         <texture id="null" />
  
-        <DESCENDANTS>
-            <DESCENDANT id="rodas" />
-            <DESCENDANT id="eixos" />                 
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <componentref id="rodas" />
+            <componentref id="eixos" />                 
+        </children>
+    </component>
  
-    <NODE id="parteSup">      
+    <component id="parteSup">      
         <material id="defaultmaterial" />    
         <texture id="null" />
  
-        <DESCENDANTS>
-            <DESCENDANT id="corpo" />
-            <DESCENDANT id="asas" />
-            <DESCENDANT id="bico" />
-            <DESCENDANT id="motores" />                
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <componentref id="corpo" />
+            <componentref id="asas" />
+            <componentref id="bico" />
+            <componentref id="motores" />                
+        </children>
+    </component>
  
-    <NODE id="corpo">      
+    <component id="corpo">      
         <material id="defaultmaterial" />    
         <texture id="fuselagem" />
  
-        <SCALE sx="10" sy="4" sz="4" />
-        <TRANSLATION x="1" y="1" z="5" />
-        <ROTATION axis="y" angle="90" />
+        <scale sx="10" sy="4" sz="4" />
+        <translate x="1" y="1" z="5" />
+        <rotate axis="y" angle="90" />
  
-        <DESCENDANTS>
-            <DESCENDANT id="cilindro" />                    
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <primitiveref id="cilindro" />                    
+        </children>
+    </component>
  
-    <NODE id="asas">      
+    <component id="asas">      
         <material id="defaultmaterial" />    
         <texture id="null" />
  
  
-        <DESCENDANTS>
-            <DESCENDANT id="asaEsq" />
-            <DESCENDANT id="asaDir" />
-            <DESCENDANT id="asaTraseira" />                    
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <componentref id="asaEsq" />
+            <componentref id="asaDir" />
+            <componentref id="asaTraseira" />                    
+        </children>
+    </component>
  
-    <NODE id="asaEsq">      
+    <component id="asaEsq">      
         <material id="defaultmaterial" />    
         <texture id="null" />
  
- 		<SCALE sx="30" sy="4" sz="35" />
-        <TRANSLATION x="1" y="0.8" z="0.6" />
-        <ROTATION axis="z" angle="-270" />
+ 		<scale sx="30" sy="4" sz="35" />
+        <translate x="1" y="0.8" z="0.6" />
+        <rotate axis="z" angle="-270" />
  
-        <DESCENDANTS>
-            <DESCENDANT id="asa" />
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <primitiveref id="asa" />
+        </children>
+    </component>
  
-    <NODE id="asaDir">      
+    <component id="asaDir">      
         <material id="defaultmaterial" />    
         <texture id="null" />
 
-        <SCALE sx="30" sy="4" sz="35" />
-        <TRANSLATION x="1" y="0.8" z="0.5" />
-        <ROTATION axis="y" angle="180" />
+        <scale sx="30" sy="4" sz="35" />
+        <translate x="1" y="0.8" z="0.5" />
+        <rotate axis="y" angle="180" />
  
-        <DESCENDANTS>
-            <DESCENDANT id="asa" />
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <primitiveref id="asa" />
+        </children>
+    </component>
 
-    <NODE id="asaTraseira">      
+    <component id="asaTraseira">      
         <material id="defaultmaterial" />    
         <texture id="null" />
 
               
-        <DESCENDANTS>
-            <DESCENDANT id="dir" />
-            <DESCENDANT id="esq" />
-            <DESCENDANT id="tras" />
-            <DESCENDANT id="corpoTras" />
+        <children>
+            <componentref id="dir" />
+            <componentref id="esq" />
+            <componentref id="tras" />
+            <componentref id="corpoTras" />
 
-        </DESCENDANTS>
-    </NODE>
+        </children>
+    </component>
  
-     <NODE id="corpoTras">      
+     <component id="corpoTras">      
         <material id="null" />    
         <texture id="fuselagem" />
          
-        <SCALE sx="15" sy="40" sz="40" /> 
-        <TRANSLATION x="-0.03" y="0.1" z="0.5" />
-        <ROTATION axis="y" angle="90" />
+        <scale sx="15" sy="40" sz="40" /> 
+        <translate x="-0.03" y="0.1" z="0.5" />
+        <rotate axis="y" angle="90" />
  
-        <DESCENDANTS>
-            <DESCENDANT id="front" />
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <primitiveref id="front" />
+        </children>
+    </component>
 
-    <NODE id="esq">      
+    <component id="esq">      
         <material id="null" />    
         <texture id="null" />
          
-        <SCALE sx="7" sy="4" sz="7.5" />
-        <TRANSLATION x="0.7" y="1" z="2.5" />
-        <ROTATION axis="y" angle="180" />
+        <scale sx="7" sy="4" sz="7.5" />
+        <translate x="0.7" y="1" z="2.5" />
+        <rotate axis="y" angle="180" />
  
-        <DESCENDANTS>
-            <DESCENDANT id="asa" />
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <primitiveref id="asa" />
+        </children>
+    </component>
 
-     <NODE id="tras">      
+     <component id="tras">      
         <material id="null" />    
         <texture id="null" />
          
-       <SCALE sx="20" sy="20" sz="3" />
-        <TRANSLATION x="0.2" y="0.2" z="6.7" />
-        <ROTATION axis="x" angle="-90" />
+       <scale sx="20" sy="20" sz="3" />
+        <translate x="0.2" y="0.2" z="6.7" />
+        <rotate axis="x" angle="-90" />
 
-        <DESCENDANTS>
-            <DESCENDANT id="asa" />
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <primitiveref id="asa" />
+        </children>
+    </component>
 
-     <NODE id="dir">      
+     <component id="dir">      
         <material id="null" />    
         <texture id="null" />
          
-        <SCALE sx="7" sy="4" sz="7.5" />
-        <TRANSLATION x="0.7" y="1" z="2.8" />
+        <scale sx="7" sy="4" sz="7.5" />
+        <translate x="0.7" y="1" z="2.8" />
  
-        <DESCENDANTS>
-            <DESCENDANT id="asa" />
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <primitiveref id="asa" />
+        </children>
+    </component>
 
-    <NODE id="bico">      
+    <component id="bico">      
         <material id="null" />    
         <texture id="fuselagem" />
          
-        <SCALE sx="15" sy="40" sz="40" /> 
-        <TRANSLATION x="4.033" y="0.1" z="0.5" />
-        <ROTATION axis="y" angle="-90" />
+        <scale sx="15" sy="40" sz="40" /> 
+        <translate x="4.033" y="0.1" z="0.5" />
+        <rotate axis="y" angle="-90" />
  
-        <DESCENDANTS>
-            <DESCENDANT id="front" />
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <primitiveref id="front" />
+        </children>
+    </component>
  
-    <NODE id="motores">      
+    <component id="motores">      
         <material id="null" />    
         <texture id="leather" />
 
-        <DESCENDANTS>
-            <DESCENDANT id="motor1" />
-            <DESCENDANT id="motor2" />
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <componentref id="motor1" />
+            <componentref id="motor2" />
+        </children>
+    </component>
  
-    <NODE id="motor1">      
+    <component id="motor1">      
         <material id="null" />    
         <texture id="leather" />
  
-        <SCALE sx="2.7" sy="2.5" sz="2.5" />
-        <TRANSLATION x="9.7" y="0.1" z="3.2" />
-        <ROTATION axis="y" angle="90" />
+        <scale sx="2.7" sy="2.5" sz="2.5" />
+        <translate x="9.7" y="0.1" z="3.2" />
+        <rotate axis="y" angle="90" />
  
-        <DESCENDANTS>
-            <DESCENDANT id="cilindro" />
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <primitiveref id="cilindro" />
+        </children>
+    </component>
  
-    <NODE id="motor2">      
+    <component id="motor2">      
         <material id="null" />    
         <texture id="leather" />
  
-        <SCALE sx="2.7" sy="2.5" sz="2.5" />
-        <TRANSLATION x="9.7" y="0.1" z="12.5" />
-        <ROTATION axis="y" angle="90" />
+        <scale sx="2.7" sy="2.5" sz="2.5" />
+        <translate x="9.7" y="0.1" z="12.5" />
+        <rotate axis="y" angle="90" />
 
-        <DESCENDANTS>
-            <DESCENDANT id="cilindro" />
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <primitiveref id="cilindro" />
+        </children>
+    </component>
  
     
-    <NODE id="rodas">      
+    <component id="rodas">      
         <material id="null" />    
         <texture id="null" /> 
  
-        <DESCENDANTS>
-            <DESCENDANT id="roda1" />
-            <DESCENDANT id="roda2" />
-            <DESCENDANT id="roda3" />
-            <DESCENDANT id="roda4" />
-            <DESCENDANT id="roda5" />
-            <DESCENDANT id="roda6" />
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <componentref id="roda1" />
+            <componentref id="roda2" />
+            <componentref id="roda3" />
+            <componentref id="roda4" />
+            <componentref id="roda5" />
+            <componentref id="roda6" />
+        </children>
+    </component>
 
-    <NODE id="eixos">      
+    <component id="eixos">      
         <material id="null" />    
         <texture id="null" />
  
-        <DESCENDANTS>
-            <DESCENDANT id="eixo1" />
-            <DESCENDANT id="eixo2" />
-            <DESCENDANT id="eixo3" />
-            <DESCENDANT id="eixo4" />
-            <DESCENDANT id="eixo5" />
-            <DESCENDANT id="eixo6" />
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <componentref id="eixo1" />
+            <componentref id="eixo2" />
+            <componentref id="eixo3" />
+            <componentref id="eixo4" />
+            <componentref id="eixo5" />
+            <componentref id="eixo6" />
+        </children>
+    </component>
 
-    <NODE id="eixo1">      
+    <component id="eixo1">      
         <material id="defaultmaterial" />    
         <texture id="null" />
 
-        <SCALE sx="0.25" sy="1" sz="0.25" />
-        <TRANSLATION x="65" y="1" z="75" />
-        <ROTATION axis="x" angle="90" />
+        <scale sx="0.25" sy="1" sz="0.25" />
+        <translate x="65" y="1" z="75" />
+        <rotate axis="x" angle="90" />
  
-        <DESCENDANTS>
-            <DESCENDANT id="cilindro" />
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <primitiveref id="cilindro" />
+        </children>
+    </component>
 
-    <NODE id="eixo2">      
+    <component id="eixo2">      
         <material id="defaultmaterial" />    
         <texture id="null" />
 
-        <SCALE sx="0.25" sy="1" sz="0.25" />
-        <TRANSLATION x="65" y="1" z="85" />
-        <ROTATION axis="x" angle="90" />
+        <scale sx="0.25" sy="1" sz="0.25" />
+        <translate x="65" y="1" z="85" />
+        <rotate axis="x" angle="90" />
  
-        <DESCENDANTS>
-            <DESCENDANT id="cilindro" />
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <primitiveref id="cilindro" />
+        </children>
+    </component>
 
-    <NODE id="eixo3">      
+    <component id="eixo3">      
         <material id="defaultmaterial" />    
         <texture id="null" />
 
-        <SCALE sx="0.25" sy="1" sz="0.25" />
-        <TRANSLATION x="180" y="1" z="80" />
-        <ROTATION axis="x" angle="90" />
+        <scale sx="0.25" sy="1" sz="0.25" />
+        <translate x="180" y="1" z="80" />
+        <rotate axis="x" angle="90" />
  
-        <DESCENDANTS>
-            <DESCENDANT id="cilindro" />
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <primitiveref id="cilindro" />
+        </children>
+    </component>
  
-    <NODE id="eixo4">      
+    <component id="eixo4">      
         <material id="defaultmaterial" />    
         <texture id="null" />
 
-       	<SCALE sx="0.25" sy="0.25" sz="0.25" />
-        <TRANSLATION x="65" y="-12" z="73" />
+       	<scale sx="0.25" sy="0.25" sz="0.25" />
+        <translate x="65" y="-12" z="73" />
 
-	    <DESCENDANTS>
-	    	<DESCENDANT id="cilindro" />
-        </DESCENDANTS>
-    </NODE>
+	    <children>
+	    	<primitiveref id="cilindro" />
+        </children>
+    </component>
 
-    <NODE id="eixo5">      
+    <component id="eixo5">      
         <material id="defaultmaterial" />    
         <texture id="null" />
 
-       	<SCALE sx="0.25" sy="0.25" sz="0.25" />
-        <TRANSLATION x="65" y="-12" z="83" />
+       	<scale sx="0.25" sy="0.25" sz="0.25" />
+        <translate x="65" y="-12" z="83" />
 
-	    <DESCENDANTS>
-	    	<DESCENDANT id="cilindro" />
-        </DESCENDANTS>
-    </NODE>
+	    <children>
+	    	<primitiveref id="cilindro" />
+        </children>
+    </component>
 
-    <NODE id="eixo6">      
+    <component id="eixo6">      
         <material id="defaultmaterial" />    
         <texture id="null" />
 
-       	<SCALE sx="0.25" sy="0.25" sz="0.25" />
-        <TRANSLATION x="180" y="-12" z="78" />
+       	<scale sx="0.25" sy="0.25" sz="0.25" />
+        <translate x="180" y="-12" z="78" />
 
-	    <DESCENDANTS>
-	    	<DESCENDANT id="cilindro" />
-        </DESCENDANTS>
-    </NODE>
+	    <children>
+	    	<primitiveref id="cilindro" />
+        </children>
+    </component>
 
-    <NODE id="roda1">      
+    <component id="roda1">      
         <material id="black" />    
         <texture id="null" />
  		
-        <SCALE sx="1" sy="1" sz="0.1" />
-        <TRANSLATION x="16" y="-3" z="180" />
+        <scale sx="1" sy="1" sz="0.1" />
+        <translate x="16" y="-3" z="180" />
  
-        <DESCENDANTS>
-            <DESCENDANT id="cilindro" />
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <componentref id="cilindro" />
+        </children>
+    </component>
  
-    <NODE id="roda2">      
+    <component id="roda2">      
         <material id="black" />    
         <texture id="null" />
  		
-		<SCALE sx="1" sy="1" sz="0.1" />
-        <TRANSLATION x="16" y="-3" z="191" />
+		<scale sx="1" sy="1" sz="0.1" />
+        <translate x="16" y="-3" z="191" />
  
-        <DESCENDANTS>
-            <DESCENDANT id="cilindro" />
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <primitiveref id="cilindro" />
+        </children>
+    </component>
  
-    <NODE id="roda3">      
+    <component id="roda3">      
         <material id="black" />    
         <texture id="null" />
 
-        <SCALE sx="1" sy="1" sz="0.1" />
-        <TRANSLATION x="16" y="-3" z="205" />
+        <scale sx="1" sy="1" sz="0.1" />
+        <translate x="16" y="-3" z="205" />
  
-        <DESCENDANTS>
-            <DESCENDANT id="cilindro" />
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <primitiveref id="cilindro" />
+        </children>
+    </component>
 
-    <NODE id="roda4">      
+    <component id="roda4">      
         <material id="black" />    
         <texture id="null" />
 
-        <SCALE sx="1" sy="1" sz="0.1" />
-        <TRANSLATION x="16" y="-3" z="216" /> 
+        <scale sx="1" sy="1" sz="0.1" />
+        <translate x="16" y="-3" z="216" /> 
  
-        <DESCENDANTS>
-            <DESCENDANT id="cilindro" />
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <primitiveref id="cilindro" />
+        </children>
+    </component>
 
-    <NODE id="roda5">      
+    <component id="roda5">      
         <material id="black" />    
         <texture id="null" />
 
-        <SCALE sx="1" sy="1" sz="0.1" />
-        <TRANSLATION x="45" y="-3" z="192" />  
+        <scale sx="1" sy="1" sz="0.1" />
+        <translate x="45" y="-3" z="192" />  
  
-        <DESCENDANTS>
-            <DESCENDANT id="cilindro" />
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <primitiveref id="cilindro" />
+        </children>
+    </component>
 
-    <NODE id="roda6">      
+    <component id="roda6">      
         <material id="black" />    
         <texture id="null" />
 
-        <SCALE sx="1" sy="1" sz="0.1" />
-        <TRANSLATION x="45" y="-3" z="203" />  
+        <scale sx="1" sy="1" sz="0.1" />
+        <translate x="45" y="-3" z="203" />  
  
-        <DESCENDANTS>
-            <DESCENDANT id="cilindro" />
-        </DESCENDANTS>
-    </NODE>
+        <children>
+            <primitiveref id="cilindro" />
+        </children>
+    </component>
  
    
     
-</NODES>
+</components>
  
 </SCENE>
