@@ -1,4 +1,4 @@
-<SCENE>
+<dsx>
  
 <INITIALS>
     <frustum near="0.1" far="250"/>                
@@ -509,4 +509,4 @@
     
 </components>
  
-</SCENE>
+</dsx>
