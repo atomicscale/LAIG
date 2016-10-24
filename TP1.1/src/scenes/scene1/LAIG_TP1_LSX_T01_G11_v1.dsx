@@ -15,31 +15,40 @@
     <background r="0.203" g="0.8" b="1" a="1" />        
 </illumination>
  
-<LIGHTS>
-    <LIGHT id="Left Wing">                                    
-        <enable value="true" />                        
-        <position x="8.0" y="-4" z="8.0" w="1.0" />      
-        <ambient r="0.4" g="0.4" b="0.4" a="1.0" />        
-        <diffuse r="0.4" g="0.4" b="0.54" a="1.0" />        
-        <specular r="0.7" g="0.7" b="0.7" a="1.0" />      
-    </LIGHT>
- 
-    <LIGHT id="Right Wing">                                    
-        <enable value="true" />                        
-        <position x="4.0" y="-4" z="5.5" w="0.0" />      
-        <ambient r="0.3" g="0.3" b="0.3" a="1.0" />        
-        <diffuse r="0.6" g="0.6" b="0.6" a="1.0" />        
-        <specular r="0.9" g="0.9" b="0.9" a="0.9" />      
-    </LIGHT>
- 
-    <LIGHT id="Sky">                                    
-        <enable value="true" />                        
-        <position x="4.5" y="-4" z="11.0" w="0.0" />      
-        <ambient r="0.4" g="0.4" b="0.4" a="1.0" />        
-        <diffuse r="0.5" g="0.5" b="0.5" a="1.0" />        
-        <specular r="0.9" g="0.9" b="0.9" a="1.0" />    
-    </LIGHT>
-</LIGHTS>
+<lights>
+
+        <!-- Deve existir um ou mais blocos "omni" ou "spot" -->
+        <!-- Os identificadores "id" nao podem ser repetidos -->
+        <omni id="omni1" enabled="1" >
+            <location x="26" y="26" z="56" w="0.2" />
+            <ambient r="0" g="0" b="0" a="1" />
+            <diffuse r="1" g="1" b="1" a="1" />
+            <specular r="1" g="1" b="1" a="1" />
+        </omni>
+
+        <omni id="omni2" enabled="1" >
+            <location x="0" y="100" z="100" w="0.2" />
+            <ambient r="0" g="0" b="0" a="1" />
+            <diffuse r="1" g="1" b="1" a="1" />
+            <specular r="1" g="1" b="1" a="1" />
+        </omni>
+
+        <omni id="omni3" enabled="1" >
+            <location x="-26" y="26" z="56" w="0.2" />
+            <ambient r="0" g="0" b="0" a="1" />
+            <diffuse r="1" g="1" b="1" a="1" />
+            <specular r="1" g="1" b="1" a="1" />
+        </omni>
+
+        <spot id="spot1" enabled="1" angle="40" exponent="0.5">
+            <!-- atencao, "target" e' diferente de "direction" -->
+            <target x="3" y="3" z="0.5" />
+            <location x="4" y="2" z="2" />
+            <ambient r="0.5" g="0.5" b="0.5" a="0.5" />
+            <diffuse r="0.5" g="0.5" b="0.5" a="0.5" />
+            <specular r="0.5" g="0.5" b="0.5" a="0.5" />
+        </spot>
+    </lights>
  
 <textures>
     <!--Engine-->
@@ -79,6 +88,7 @@
     <primitive id="triangulo" type="triangle" args="2 0 12 12 0 2 0 0 0" />
     <primitive id="asa" type="cylinder" args="0.7 0.2 0.1 20 20" />
     <primitive id="front" type="cylinder" args="0.7 0.01 0.1 20 20" />
+    <primitive id="toro" type="torus" args="0.75 0.5 100 100" />
 
 </primitives>
  
@@ -97,7 +107,7 @@
                 <!-- componentes ou primitivas -->
                 <componentref id="estrada" />              
                 <componentref id="landing" />
-                <componentref id="aviao" /> 
+                <componentref id="aviao" />
 
         </children>
     </component>
@@ -109,7 +119,7 @@
         <scale sx="500" sy="1" sz="100" />
         <translate x="-4" y="-4" z="2.5" />
         <rotate axis="x" angle="-90" />
- 
+    
         <children>
             <primitiveref id="rectangulo" />              
         </children>

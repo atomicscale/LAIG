@@ -7,7 +7,8 @@ function DSXParser(filename, _scene) {
         camera: new LSXInitials(),
         illumination:{
             global: new LSXIllumination(),
-            lights: []
+            omniLights: [],
+            spotLights: []
         },
         materials: [],
         textures: [],
@@ -39,7 +40,7 @@ DSXParser.prototype.onXMLReady = function() {
     var parseFunc = [
                         this.parseCamera(tempInfo.element),
                         this.parseIllumination(tempInfo.element), 
-                        this.parseLights(tempInfo.element),
+                        this.loadLights(tempInfo.element),
                         this.parseTextures(tempInfo.element),
                         this.parseMaterials(tempInfo.element),
                         this.parseLeaves(tempInfo.element),
@@ -172,42 +173,70 @@ DSXParser.prototype.parseIllumination = function(element) {
 
 
 
-DSXParser.prototype.parseLights = function(element) {
 
-    var lightsStruct = {
-        element: {
-            data: element.getElementsByTagName('LIGHTS')[0],
-            error: "<LIGHTS> element is missing."
-        },
-        lights: {
-            data: element.getElementsByTagName('LIGHTS')[0].getElementsByTagName('LIGHT')
-        }
+DSXParser.prototype.loadLights = function(rootElement) {
+    var lightElements = rootElement.getElementsByTagName('lights')[0];
 
-    };
-
-    if(!(this.validateObject(lightsStruct.element.data)))
-            return "Lights parser Error.";
-
-    for (var i = 0; i < lightsStruct.lights.data.length; i++) {
-
-        var light = new LSXLight(this.config.XML.data.getString(lightsStruct.lights.data[i], 'id'));
-        light.enabled = this.config.XML.data.getBoolean(lightsStruct.lights.data[i].getElementsByTagName('enable')[0], 'value');
-        light.ambient = this.parseColor(lightsStruct.lights.data[i].getElementsByTagName('ambient')[0]);
-        light.diffuse = this.parseColor(lightsStruct.lights.data[i].getElementsByTagName('diffuse')[0]);
-        light.specular = this.parseColor(lightsStruct.lights.data[i].getElementsByTagName('specular')[0]);
-
-        var aux = lightsStruct.lights.data[i].getElementsByTagName('position')[0];
-        light.position.x = this.config.XML.data.getFloat(aux, 'x');
-        light.position.y = this.config.XML.data.getFloat(aux, 'y');
-        light.position.z = this.config.XML.data.getFloat(aux, 'z');
-        light.position.w = this.config.XML.data.getFloat(aux, 'w');
-
-        light.info();
-        this.config.illumination.lights.push(light);
+    if (lightElements == null) {
+        this.onXMLError("Error loading Lights. No Lights Tag");
+        return 1;
     }
 
-    return null;
-};
+    this.loadOmniLights(lightElements);
+    this.loadSpotLights(lightElements);
+
+    if (this.config.illumination.omniLights.length == 0 && this.config.illumination.spotLights.length == 0) {
+        onXMLError("Error No lights defined.");
+        return 1;
+    }
+}
+
+
+DSXParser.prototype.loadOmniLights = function(lightElements) {
+    var omniElements, lightElement, locationElement, location;
+
+    omniElements = lightElements.getElementsByTagName('omni');
+
+    for (var omniElement of omniElements) {
+        lightElement = this.loadLightsCommon(omniElement);
+
+        locationElement = omniElement.getElementsByTagName('location')[0];
+        location = new Point3W(this.config.XML.data.getFloat(locationElement, 'x'), this.config.XML.data.getFloat(locationElement, 'y'),
+            this.config.XML.data.getFloat(locationElement, 'z'), this.config.XML.data.getFloat(locationElement, 'w'));
+
+        this.config.illumination.omniLights.push(new Omni(lightElement, location));
+    }
+}
+
+
+DSXParser.prototype.loadSpotLights = function(lightElements) {
+    var spotElements, lightElement, angle, exponent, target, location;
+
+    var spotElements = lightElements.getElementsByTagName('spot');
+
+    for (var spotElement of spotElements) {
+        lightElement = this.loadLightsCommon(spotElement);
+        angle = this.config.XML.data.getFloat(spotElement, 'angle');
+        exponent = this.config.XML.data.getFloat(spotElement, 'exponent');
+        target = this.getPoint3Element(spotElement.getElementsByTagName('target')[0]);
+        location = this.getPoint3Element(spotElement.getElementsByTagName('location')[0]);
+
+        this.config.illumination.spotLights.push(new Spot(lightElement, angle * this.degToRad, exponent, target, location));
+    }
+}
+
+
+DSXParser.prototype.loadLightsCommon = function(lightElement) {
+    var id, enabled, ambient, diffuse, specular;
+
+    id = this.config.XML.data.getString(lightElement, 'id');
+    enabled = this.config.XML.data.getBoolean(lightElement, 'enabled');
+    ambient = this.parseColor(lightElement.getElementsByTagName('ambient')[0]);
+    diffuse = this.parseColor(lightElement.getElementsByTagName('diffuse')[0]);
+    specular = this.parseColor(lightElement.getElementsByTagName('specular')[0]);
+
+    return new Light(id, enabled, ambient, diffuse, specular);
+}
 
 DSXParser.prototype.parseTextures = function(element) {
 
@@ -320,6 +349,17 @@ DSXParser.prototype.parseLeaves = function(element) {
                     args.push(parseInt(_args[1]));
                     args.push(parseInt(_args[2]));
                 }
+            },
+            torus:{
+                setArgs: function(args, _args){
+                    if (_args.length != 4)
+                    return "Invalid number of arguments for type 'torus'";
+
+                    args.push(parseFloat(_args[0]));
+                    args.push(parseFloat(_args[1]));
+                    args.push(parseInt(_args[2]));
+                    args.push(parseInt(_args[3]));
+                }
             }
         },
         leaves: {
@@ -335,7 +375,7 @@ DSXParser.prototype.parseLeaves = function(element) {
 
     for (var i = 0; i < leavesStruct.leaves.data.length; i++) {
         var leaf = new LSXLeaf(leavesStruct.leaves.data[i].getAttribute('id'));
-        leaf.type = this.config.XML.data.getItem(leavesStruct.leaves.data[i], 'type', ['rectangle', 'cylinder', 'sphere', 'triangle']);
+        leaf.type = this.config.XML.data.getItem(leavesStruct.leaves.data[i], 'type', ['rectangle', 'cylinder', 'sphere', 'triangle', 'torus']);
 
         var args_aux = leavesStruct.leaves.data[i].getAttribute('args').split(" ");
         for (var j = 0; j < args_aux.length; j++) {
@@ -451,6 +491,17 @@ DSXParser.prototype.parseColor = function(element) {
     color.a = this.config.XML.data.getFloat(element, 'a');
     return color;
 };
+DSXParser.prototype.getPoint3Element = function(element) {
+    if (element == null) {
+        this.onXMLError("Error loading 'Point3' element .");
+        return 1;
+    }
+
+    var res = new Point3(this.config.XML.data.getFloat(element, 'x'), this.config.XML.data.getFloat(element, 'y'),
+        this.config.XML.data.getFloat(element, 'z'));
+
+    return res;
+}
 DSXParser.prototype.findNode = function(id) {
     for (i = 0; i < this.config.XML.parsedTree.nodes.length; i++)
         if (this.config.XML.parsedTree.nodes[i].id == id) return this.config.XML.parsedTree.nodes[i];
@@ -477,3 +528,52 @@ DSXParser.prototype.SuccessMSG = function(message){
 DSXParser.prototype.onXMLError = function(message) {
     console.error("Operation failed.\nError: " + message);
 };
+
+class Light {
+  constructor(id, enabled, ambient, diffuse, specular) {
+    this.id = id;
+    this.enabled = enabled;
+    this.ambient = ambient;
+    this.diffuse = diffuse;
+    this.specular = specular;
+  }
+}
+
+
+class Omni extends Light {
+  constructor(light, location) {
+    super(light.id, light.enabled, light.ambient, light.diffuse, light.specular);
+    this.location = location;
+  }
+}
+
+
+class Spot extends Light{
+  constructor(light, angle, exponent, target, location) {
+    super(light.id, light.enabled, light.ambient, light.diffuse, light.specular);
+    this.angle = angle;
+    this.exponent = exponent;
+    this.location = location;
+    this.direction = new Point3(target.x - location.x, target.y - location.y, target.z - location.z);
+  }
+}
+
+class Point3W {
+	constructor(x, y, z, w) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.w = w;
+	}
+}
+class Point3 {
+	constructor(x, y, z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+
+	toArray() {
+		return [this.x, this.y, this.z];
+	}
+}

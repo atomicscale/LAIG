@@ -1,7 +1,10 @@
 var deg2rad = Math.PI / 180;
 
-function DSXscene() {
-    CGFscene.call(this);
+function DSXscene(myInterface) {
+  CGFscene.call(this);
+
+  this.interface=myInterface;
+
 }
 
 DSXscene.prototype = Object.create(CGFscene.prototype);
@@ -23,6 +26,7 @@ DSXscene.prototype.init = function(application) {
     this.materials = [];
     this.leaves = [];
     this.objects = [];
+    this.lightsStatus = [];
 
     this.axis = new CGFaxis(this);
 };
@@ -63,7 +67,7 @@ DSXscene.prototype.onGraphLoaded = function() {
     this.setGlobalAmbientLight(ambi_illum.r, ambi_illum.g, ambi_illum.b, ambi_illum.a);
 
     // Lights
-    this.initLights();
+    this.initGraphLights();
 
     // Textures
     if (this.graph.config.textures.length > 0)
@@ -127,6 +131,8 @@ DSXscene.prototype.display = function() {
         }
     }
 
+    this.updateLights();
+
     //this.shader.unbind();
 };
 
@@ -156,35 +162,87 @@ DSXscene.prototype.applyInitials = function() {
     this.scale(scale.sx, scale.sy, scale.sz);
 };
 
+DSXscene.prototype.initGraphLights = function () {
+    var index = 0;
+
+
+    this.lightsStatus= new Array( this.graph.config.illumination.omniLights.length + this.graph.config.illumination.spotLights.length);
+
+    for (var i = 0; i < this.graph.config.illumination.omniLights.length; i++,index++) {
+      var omni = this.graph.config.illumination.omniLights[i];
+
+      this.lights[index].setPosition(omni.location.x, omni.location.y, omni.location.z, omni.location.w);
+      this.lights[index].setAmbient(omni.ambient.r, omni.ambient.g, omni.ambient.b, omni.ambient.a);
+      this.lights[index].setDiffuse(omni.diffuse.r, omni.diffuse.g, omni.diffuse.b, omni.diffuse.a);
+      this.lights[index].setSpecular(omni.specular.r, omni.specular.g, omni.specular.b, omni.specular.a);
+
+      this.lightsStatus[index] = omni.enabled;
+      this.interface.addLight("omni",index,omni.id);
+
+      if (omni.enabled)
+        this.lights[index].enable();
+      else
+        this.lights[index].disable();
+
+      this.lights[index].setVisible(true);
+      this.lights[index].update();
+    }
+
+
+
+    for (var i = 0; i < this.graph.config.illumination.spotLights.length; i++,index++) {
+      var spot = this.graph.config.illumination.spotLights[i];
+
+      this.lights[index].setPosition(spot.location.x, spot.location.y, spot.location.z, 1);
+      this.lights[index].setAmbient(spot.ambient.r, spot.ambient.g, spot.ambient.b, spot.ambient.a);
+      this.lights[index].setDiffuse(spot.diffuse.r, spot.diffuse.g, spot.diffuse.b, spot.diffuse.a);
+      this.lights[index].setSpecular(spot.specular.r, spot.specular.g, spot.specular.b, spot.specular.a);
+      this.lights[index].setSpotExponent(spot.exponent);
+      this.lights[index].setSpotDirection(spot.direction.x, spot.direction.y, spot.direction.z);
+
+      this.lightsStatus[index] = spot.enabled;
+      this.interface.addLight("spot",index,spot.id);
+
+      if (spot.enabled)
+        this.lights[index].enable();
+      else
+        this.lights[index].disable();
+
+      this.lights[index].setVisible(true);
+      this.lights[index].update();
+    }
+
+
+
+};
+
+
+DSXscene.prototype.updateLights = function () {
+
+  for (var i = 0; i < this.lightsStatus.length; i++) {
+    if(this.lightsStatus[i])
+      this.lights[i].enable();
+    else
+      this.lights[i].disable();
+  }
+
+  for (var i = 0; i < this.lights.length; i++)
+    this.lights[i].update();
+
+}
+
 /**
  * Adds lights to scene defined in <LIGHTS>
  */
 DSXscene.prototype.initLights = function() {
-    //this.shader.bind();
-
-    this.lights = [];
-    this.lightsID = [];
-
-    for (var i = 0; i < this.graph.config.illumination.lights.length; i++) {
-        var l = this.graph.config.illumination.lights[i];
-        var aux = new CGFlight(this, i);
-
-        aux.id = l.id;
-        l.enabled ? aux.enable() : aux.disable();
-        aux.setPosition(l.position.x, l.position.y, l.position.z, l.position.w);
-        aux.setAmbient(l.ambient.r, l.ambient.g, l.ambient.b, l.ambient.a);
-        aux.setDiffuse(l.diffuse.r, l.diffuse.g, l.diffuse.b, l.diffuse.a);
-        aux.setSpecular(l.specular.r, l.specular.g, l.specular.b, l.specular.a);
-        aux.setVisible(true);
-        aux.update();
-
-        this.lights[i] = aux;
-        this.lightsID[l.id] = l.enabled;
-    }
-
-    //this.shader.unbind();
-
-    this.interface.initLights();
+    
+  this.lights[0].setPosition(2, 3, 3, 1);
+  this.lights[0].setAmbient(0, 0, 0, 1);
+  this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
+  this.lights[0].setSpecular(1.0, 1.0, 1.0, 1.0);
+  this.lights[0].setVisible(true);
+  this.lights[0].enable();
+  this.lights[0].update();
 
 };
 
@@ -212,6 +270,11 @@ for (var i = 0; i < this.graph.config.XML.parsedTree.leaves.length; i++) {
                 break;
             case "triangle":
                 primitive = new MyTriangle(this, leaf.args);
+                primitive.id = leaf.id;
+                this.leaves.push(primitive);
+                break;
+         	case "torus":
+                primitive = new MyTorus(this, leaf.args);
                 primitive.id = leaf.id;
                 this.leaves.push(primitive);
                 break;

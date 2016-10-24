@@ -58,6 +58,7 @@ serialInclude(['../lib/CGF.js',
     'primitives/MyQuad.js',
     'primitives/MyTriangle.js',
     'primitives/MySphere.js',
+    'primitives/MyTorus.js',
 
     'lsxscene/SceneMaterial.js',
     'lsxscene/SceneTexture.js',
@@ -67,9 +68,8 @@ serialInclude(['../lib/CGF.js',
 
     main = function() {
         var app = new CGFapplication(document.body);
-        var myScene = new DSXscene();
         var myInterface = new Interface();
-        myInterface.setScene(myScene);
+        var myScene = new DSXscene(myInterface);
 
         app.init();
 
@@ -78,7 +78,7 @@ serialInclude(['../lib/CGF.js',
 
         myInterface.setActiveCamera(myScene.camera);
 
-        var filename = getUrlVars()['file'] || "scene1/LAIG_TP1_LSX_T01_G11_v1.lsx";
+        var filename = getUrlVars()['file'] || "scene1/LAIG_TP1_LSX_T01_G11_v1.dsx";
 
         var myGraph = new DSXParser(filename, myScene);
 
