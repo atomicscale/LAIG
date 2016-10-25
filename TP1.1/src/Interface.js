@@ -24,6 +24,23 @@ Interface.prototype.init = function(application) {
     return true;
 };
 
+
+Interface.prototype.processKeyDown = function(event) {
+
+
+    switch (event.keyCode) {
+        case (86):
+        case (118): //V
+            this.scene.updateView();
+            break;
+        case (77):
+        case (109): //M
+            this.scene.updateMaterial();
+            break;
+    };
+};
+
+
 Interface.prototype.addLight = function(type, i, name) {
     if (type == "omni")
         this.omni.add(this.scene.lightsStatus, i, this.scene.lightsStatus[i]).name(name);

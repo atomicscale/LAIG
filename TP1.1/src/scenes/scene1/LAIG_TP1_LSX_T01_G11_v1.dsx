@@ -1,14 +1,29 @@
 <dsx>
  
-<INITIALS>
-    <frustum near="0.1" far="250"/>                
-    <translation x="-1" y="-5" z="5" />              
-    <rotation axis="x" angle="0" />                
-    <rotation axis="y" angle="-180" />                
-    <rotation axis="z" angle="0" />                
-    <scale sx="0.25" sy="0.25" sz="0.25" />        
-    <reference length="0" />                        
-</INITIALS>
+
+
+<views default="p1" >
+
+        <perspective id="p1" near="0.1" far="500" angle="22">
+            <from x="-70" y="40" z="10" />
+            <to x="30" y="10" z="10" />
+        </perspective>
+
+        <perspective id="p2" near="0.1" far="1500" angle="40">
+            <from x="25" y="25" z="25" />
+            <to x="0" y="0" z="0" />
+        </perspective>
+
+        <perspective id="p3" near="0.1" far="1500" angle="90">
+            <from x="100" y="25" z="200" />
+            <to x="0" y="0" z="0" />
+        </perspective>
+
+        <perspective id="p4" near="0.1" far="1500" angle="50">
+            <from x="300" y="0" z="800" />
+            <to x="3" y="0" z="0" />
+        </perspective>
+    </views>
  
 <illumination doublesided="1" local="1">
     <ambient r="0.2" g="0.2" b="0.2" a="1.0" />                                  

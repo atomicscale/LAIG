@@ -2,9 +2,11 @@ function DSXParser(filename, _scene) {
 
     _scene.graph = this;
 
+    this.degToRad = Math.PI / 180.0;
+
     this.config = {
         scene: _scene,
-        camera: new LSXInitials(),
+        perspectives: [],
         illumination:{
             global: new LSXIllumination(),
             omniLights: [],
@@ -38,7 +40,7 @@ DSXParser.prototype.onXMLReady = function() {
     };
 
     var parseFunc = [
-                        this.parseCamera(tempInfo.element),
+                        this.loadViews(tempInfo.element),
                         this.parseIllumination(tempInfo.element), 
                         this.loadLights(tempInfo.element),
                         this.parseTextures(tempInfo.element),
@@ -62,73 +64,41 @@ DSXParser.prototype.onXMLReady = function() {
 };
 
 
+DSXParser.prototype.loadViews = function(element) {
+    var viewElement, perspectiveElements, id, near, far, angle, from, to;
 
-DSXParser.prototype.parseCamera = function(element) {
-
-    var cameraStruct = {
-        element:{
-            data: element.getElementsByTagName('INITIALS')[0],
-            error: "views are missing."
-        },
-        components:{
-            frustum:{
-                data: element.getElementsByTagName('INITIALS')[0].getElementsByTagName('frustum')[0],
-                far:  this.config.XML.data.getFloat(element.getElementsByTagName('INITIALS')[0].getElementsByTagName('frustum')[0], 'far'),
-                near: this.config.XML.data.getFloat(element.getElementsByTagName('INITIALS')[0].getElementsByTagName('frustum')[0], 'near'),
-                error: "<frustum> element is missing"
-            },
-            translation: {
-                data: element.getElementsByTagName('INITIALS')[0].getElementsByTagName('translation')[0],
-                x: this.config.XML.data.getFloat(element.getElementsByTagName('INITIALS')[0].getElementsByTagName('translation')[0], 'x'),
-                y: this.config.XML.data.getFloat(element.getElementsByTagName('INITIALS')[0].getElementsByTagName('translation')[0], 'y'),
-                z: this.config.XML.data.getFloat(element.getElementsByTagName('INITIALS')[0].getElementsByTagName('translation')[0], 'z'),
-                error: "<translation> element is missing"
-            },
-            rotation: {
-                data: element.getElementsByTagName('INITIALS')[0].getElementsByTagName('rotation'),
-                error: "Needs 3 <rotation> elements"
-            },
-            scale: {
-                data: element.getElementsByTagName('INITIALS')[0].getElementsByTagName('scale')[0],
-                sx: this.config.XML.data.getFloat(element.getElementsByTagName('INITIALS')[0].getElementsByTagName('scale')[0], 'sx'),
-                sy: this.config.XML.data.getFloat(element.getElementsByTagName('INITIALS')[0].getElementsByTagName('scale')[0], 'sy'),
-                sz: this.config.XML.data.getFloat(element.getElementsByTagName('INITIALS')[0].getElementsByTagName('scale')[0], 'sz'),
-                error: "<scale> element is missing"
-            },
-            reference: {
-                data: element.getElementsByTagName('INITIALS')[0].getElementsByTagName('reference')[0],
-                lenght: this.config.XML.data.getFloat(element.getElementsByTagName('INITIALS')[0].getElementsByTagName('reference')[0], 'length'),
-                error: "<reference> element is missing"
-            }
-        }
-    };
-
-    if(!(this.validateObject(cameraStruct.element.data) &&
-        this.validateObject(cameraStruct.components.frustum.data) &&
-        this.validateObject(cameraStruct.components.translation.data) &&
-        this.validateObject(cameraStruct.components.scale.data) &&
-        this.validateObject(cameraStruct.components.reference.data)) &&
-        (cameraStruct.components.rotation.data.length != 3 && this.validateObject(cameraStruct.components.rotation.data)))
-            return "Camera parse error.";
+    viewElement = element.getElementsByTagName('views')[0];
+    if (viewElement == null) {
+        this.onXMLError("Error loading view. No views Tag");
+        return 1;
+    }
 
 
-    this.config.camera.setFrustum(cameraStruct.components.frustum);
-    this.config.camera.setTranslation(cameraStruct.components.translation);
-    this.config.camera.setScale(cameraStruct.components.scale);
-    this.config.camera.setReference(cameraStruct.components.reference);
+    perspectiveElements = viewElement.getElementsByTagName('perspective');
+
+    if (perspectiveElements.length == 0) {
+        this.onXMLError("at least one perspective should be declared");
+        return 1;
+    }
+
+    for (var perspectiveElement of perspectiveElements) {
+        id = this.config.XML.data.getString(perspectiveElement, 'id');
+        near = this.config.XML.data.getFloat(perspectiveElement, 'near');
+        far = this.config.XML.data.getFloat(perspectiveElement, 'far');
+        angle = this.config.XML.data.getFloat(perspectiveElement, 'angle');
+        from = this.getPoint3Element(perspectiveElement.getElementsByTagName('from')[0]);
+        to = this.getPoint3Element(perspectiveElement.getElementsByTagName('to')[0]);
 
 
-    for (var i = 0; i < cameraStruct.components.rotation.data.length; i++) 
-        this.config.camera.setRotation({
-            axis: this.config.XML.data.getItem(cameraStruct.components.rotation.data[i], 'axis', ['x', 'y', 'z']),
-            angle: this.config.XML.data.getFloat(cameraStruct.components.rotation.data[i], 'angle')
-        });
+        this.config.perspectives.push(new CGFcamera(angle * this.degToRad, near, far,
+            vec3.fromValues(from.x, from.y, from.z),
+            vec3.fromValues(to.x, to.y, to.z)))
+    }
+    console.log("perspetivasssssssssssssssssssssssssssss");
+    console.log(this.config.perspectives);
     
-
-    this.config.camera.info();
-
-    return null;
 };
+
 
 DSXParser.prototype.parseIllumination = function(element) {
 

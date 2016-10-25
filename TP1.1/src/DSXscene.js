@@ -27,6 +27,7 @@ DSXscene.prototype.init = function(application) {
     this.leaves = [];
     this.objects = [];
     this.lightsStatus = [];
+    this.viewIndex = 0;
 
     this.axis = new CGFaxis(this);
 };
@@ -54,10 +55,10 @@ DSXscene.prototype.setDefaultAppearance = function() {
  */
 DSXscene.prototype.onGraphLoaded = function() {
     // Frustum
-    this.camera.near = this.graph.config.camera.frustum.near;
-    this.camera.far = this.graph.config.camera.frustum.far;
+    /*this.camera.near = this.graph.config.camera.frustum.near;
+    this.camera.far = this.graph.config.camera.frustum.far;*/
 
-    this.axis = new CGFaxis(this, this.graph.config.camera.reference);
+    //this.axis = new CGFaxis(this, this.graph.config.camera.reference);
 
     // Illumination
     var bg_illum = this.graph.config.illumination.global.background;
@@ -93,11 +94,20 @@ DSXscene.prototype.onGraphLoaded = function() {
         this.materials.push(aux);
     }
 
+    this.updateView();
+
     // Leaves
     this.initLeaves();
 
     // Nodes
     this.initNodes();
+};
+
+DSXscene.prototype.updateView = function () {
+    this.camera = this.graph.config.perspectives[this.viewIndex];
+    this.interface.setActiveCamera(this.graph.config.perspectives[this.viewIndex]);
+
+    this.viewIndex = (++this.viewIndex) % this.graph.config.perspectives.length;
 };
 
 DSXscene.prototype.display = function() {
@@ -118,7 +128,7 @@ DSXscene.prototype.display = function() {
         if (this.axis.length != 0) this.axis.display();
 
         // Apply initial transformations
-        this.applyInitials();
+        //this.applyInitials();
 
         // Update lights
         for (var i = 0; i < this.lights.length; i++)
@@ -139,7 +149,7 @@ DSXscene.prototype.display = function() {
 /**
  * Apply the initial transformations defined in <INITIALS>
  */
-DSXscene.prototype.applyInitials = function() {
+/*DSXscene.prototype.applyInitials = function() {
     var inits = this.graph.config.camera;
     var trans = inits.translation;
     var scale = inits.scale;
@@ -160,7 +170,7 @@ DSXscene.prototype.applyInitials = function() {
         }
     }
     this.scale(scale.sx, scale.sy, scale.sz);
-};
+};*/
 
 DSXscene.prototype.initGraphLights = function () {
     var index = 0;
