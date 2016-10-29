@@ -31,10 +31,8 @@ uniform mat4 uMVMatrix;
 uniform mat4 uPMatrix;
 uniform mat4 uNMatrix;
 
-uniform bool uLightEnabled;
-uniform bool uLightModelTwoSided;
-
-
+uniform bool uLightEnabled;	// not being used
+uniform bool uLightModelTwoSided;	// not being used
 
 #define NUMBER_OF_LIGHTS 8
 
@@ -100,7 +98,7 @@ vec4 lighting(vec4 vertex, vec3 E, vec3 N) {
         }
     }
 
-	result += uGlobalAmbient * uFrontMaterial.ambient;
+	result += uGlobalAmbient * uFrontMaterial.ambient + uFrontMaterial.emission;
     result = clamp(result, vec4(0.0), vec4(1.0));
 
     result.a = 1.0;
