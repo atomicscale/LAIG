@@ -71,6 +71,7 @@
         <texture id="fuselagem" file="textures/fuselagem.jpg" length_s="1.0" length_t="1.0" />
         <texture id="road" file="textures/estradaz.jpg" length_s="5.0" length_t="4.0" />
         <texture id="landing" file="textures/roadz.jpg" length_s="5.0" length_t="4.0" />
+        <texture id="boardTex" file="textures/boardTex.png" length_s="1.0" length_t="1.0" />
 </textures>
 
     <materials>
@@ -104,6 +105,22 @@
     <primitive id="asa" type="cylinder" args="0.7 0.2 0.1 20 20" />
     <primitive id="front" type="cylinder" args="0.7 0.01 0.1 20 20" />
     <primitive id="toro" type="torus" args="0.75 0.5 100 100" />
+    <primitive id="patch" type="patch" orderU="2" orderV="3" partsU="20" partsV="20">
+                <controlpoint x="-2.0" y="-2.0" z="1.0" />
+               <controlpoint x="-2.0" y="-1.0" z="-2.0" />
+               <controlpoint x="-2.0" y="1.0" z="5.0" />
+               <controlpoint x="-2.0" y="2.0" z="-1.0" />
+
+               <controlpoint x="0" y="-2.0" z="0" />
+               <controlpoint x="0" y="-1.0" z="-1.0" />
+               <controlpoint x="0" y="1.0" z="1.5" />
+               <controlpoint x="0" y="2.0" z="0" />
+
+               <controlpoint x="2.0" y="-2.0" z="-1.0" />
+               <controlpoint x="2.0" y="-1.0" z="2.0" />
+               <controlpoint x="2.0" y="1.0" z="-5.0" />
+               <controlpoint x="2.0" y="2.0" z="1.0" />
+    </primitive>
 
 </primitives>
 
@@ -137,12 +154,28 @@
                 <!-- deve existir uma ou mais tags "componentref" e/ou -->
                 <!-- "componentref", identificando outros -->
                 <!-- componentes ou primitivas -->
+                <componentref id="patches" />
                 <componentref id="estrada" />              
                 <componentref id="landing" />
                 <componentref id="aviao" />
+                
 
         </children>
     </component>
+
+    <component id="patches">
+            <materials>
+                <material id="null"  />
+            </materials>
+            <texture id="boardTex" />
+
+            <translate x="20" y="10" z="10" />
+
+            <children>
+                <primitiveref id="patch" />
+            </children>
+
+        </component>
    
     <component id="estrada">      
         <material id="null" />    

@@ -312,88 +312,93 @@ var animations_list = mainElement.getElementsByTagName('animations')[0];
 };
 
 DSXParser.prototype.parseLeaves = function(element) {
-    var leavesStruct = {
-        element: {
-            data: element.getElementsByTagName('primitives')[0],
-            error: "<primitives> element is missing."
-        },
-        shapes:{
-            rectangle:{
-                setArgs: function(args, _args){
-                    if (_args.length != 4)
-                        return "Invalid number of arguments for type 'rectangle'";
+   var leaves_list = element.getElementsByTagName('primitives')[0];
+    
+    if (leaves_list == null) 
+        return "<primitives> element is missing.";
 
-                    for (var i = 0; i < _args.length; i++)
-                        args.push(parseFloat(_args[i]));
-                }
-            },
-            triangle:{
-                setArgs: function(args, _args){
-                    if (_args.length != 9)
-                    return "Invalid number of arguments for type 'triangle'";
+    var leaves = leaves_list.getElementsByTagName('primitive');
 
-                for (var i = 0; i < _args.length; i++)
-                    args.push(parseFloat(_args[i]));
+    for (i = 0; i < leaves.length; i++) {
+        var leaf = new LSXLeaf(leaves[i].getAttribute('id'));
+        leaf.type = this.config.XML.data.getString(leaves[i], 'type');
+
+        var noargslist = ['terrain', 'plane', 'patch'];
+
+        if (noargslist.indexOf(leaf.type) < 0) {
+            var args_aux = leaves[i].getAttribute('args').split(" ");
+            for (var j = 0; j < args_aux.length; j++) {
+                if (args_aux[j] === "") {
+                    args_aux.splice(j, 1);
+                    --j;
                 }
-            },
-            cylinder:{
-                setArgs: function(args, _args){
-                    if (_args.length != 5)
+            }
+        }
+
+        switch (leaf.type) {
+            case "rectangle":
+                if (args_aux.length != 4)
+                    return "Invalid number of arguments for type 'rectangle'";
+
+                for (var j = 0; j < args_aux.length; j++)
+                    leaf.args.push(parseFloat(args_aux[j]));
+
+                break;
+            case "cylinder":
+                if (args_aux.length != 5)
                     return "Invalid number of arguments for type 'cylinder'";
 
-                    args.push(parseFloat(_args[0]));
-                    args.push(parseFloat(_args[1]));
-                    args.push(parseFloat(_args[2]));
-                    args.push(parseInt(_args[3]));
-                    args.push(parseInt(_args[4]));
-                }
-            },
-            sphere:{
-                setArgs: function(args, _args){
-                    if (_args.length != 3)
-                        return "Invalid number of arguments for type 'sphere'";
+                leaf.args.push(parseFloat(args_aux[0]));
+                leaf.args.push(parseFloat(args_aux[1]));
+                leaf.args.push(parseFloat(args_aux[2]));
+                leaf.args.push(parseInt(args_aux[3]));
+                leaf.args.push(parseInt(args_aux[4]));
+                break;
+            case "sphere":
+                if (args_aux.length != 3)
+                    return "Invalid number of arguments for type 'sphere'";
 
-                    args.push(parseFloat(_args[0]));
-                    args.push(parseInt(_args[1]));
-                    args.push(parseInt(_args[2]));
-                }
-            },
-            torus:{
-                setArgs: function(args, _args){
-                    if (_args.length != 4)
+                leaf.args.push(parseFloat(args_aux[0]));
+                leaf.args.push(parseInt(args_aux[1]));
+                leaf.args.push(parseInt(args_aux[2]));
+                break;
+            case "triangle":
+                if (args_aux.length != 9)
+                    return "Invalid number of arguments for type 'triangle'";
+
+                for (j = 0; j < args_aux.length; j++)
+                    leaf.args.push(parseFloat(args_aux[j]));
+
+                break;
+            case "torus":
+                if (args_aux.length != 4)
                     return "Invalid number of arguments for type 'torus'";
 
-                    args.push(parseFloat(_args[0]));
-                    args.push(parseFloat(_args[1]));
-                    args.push(parseInt(_args[2]));
-                    args.push(parseInt(_args[3]));
+                for (j = 0; j < args_aux.length; j++)
+                    leaf.args.push(parseFloat(args_aux[j]));
+                
+                break;
+            case "patch":
+                var orderU = this.config.XML.data.getInteger(leaves[i], 'orderU');
+                var orderV = this.config.XML.data.getInteger(leaves[i], 'orderV');
+                leaf.args.push(orderU);
+                leaf.args.push(orderV);
+                leaf.args.push(this.config.XML.data.getInteger(leaves[i], 'partsU'));
+                leaf.args.push(this.config.XML.data.getInteger(leaves[i], 'partsV'));
+                var cps = [];
+                var cps_list = leaves[i].getElementsByTagName('controlpoint');
+                for (var k = 0; k < cps_list.length; ++k) {
+                    var cp = [];
+                    cp[0] = this.config.XML.data.getFloat(cps_list[k], 'x');
+                    cp[1] = this.config.XML.data.getFloat(cps_list[k], 'y');
+                    cp[2] = this.config.XML.data.getFloat(cps_list[k], 'z');
+                    cp[3] = 1;
+                    cps.push(cp);
                 }
-            }
-        },
-        leaves: {
-            data: element.getElementsByTagName('primitives')[0].getElementsByTagName('primitive')
+                if (cps.length != 12) return "Invalid number of control points";
+                leaf.args.push(cps);
+                break;
         }
-
-    };
-
-    if(!(this.validateObject(leavesStruct.element.data)))
-            return "Leaves parser Error.";
-
-
-
-    for (var i = 0; i < leavesStruct.leaves.data.length; i++) {
-        var leaf = new LSXLeaf(leavesStruct.leaves.data[i].getAttribute('id'));
-        leaf.type = this.config.XML.data.getItem(leavesStruct.leaves.data[i], 'type', ['rectangle', 'cylinder', 'sphere', 'triangle', 'torus']);
-
-        var args_aux = leavesStruct.leaves.data[i].getAttribute('args').split(" ");
-        for (var j = 0; j < args_aux.length; j++) {
-            if (args_aux[j] === ""){
-                args_aux.splice(j, 1);
-                --j;
-            }
-        }
-
-        leavesStruct.shapes[leaf.type].setArgs(leaf.args, args_aux);
 
         leaf.info();
         this.config.XML.parsedTree.leaves.push(leaf);

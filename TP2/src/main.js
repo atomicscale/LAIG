@@ -60,6 +60,7 @@ serialInclude(['../lib/CGF.js',
     'primitives/MyTriangle.js',
     'primitives/MySphere.js',
     'primitives/MyTorus.js',
+    'primitives/MyPatch.js',
 
     'animation/animation.js',
     'animation/LinearAnimation.js',
