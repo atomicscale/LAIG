@@ -5,6 +5,7 @@ function LSXNode(id) {
     this.matrix = mat4.create();
 
     this.descendants = [];
+    this.anims = [];
 
     this.info = function() {
         console.log("Node " + this.id);

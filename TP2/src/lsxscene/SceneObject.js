@@ -4,6 +4,8 @@ function SceneObject(id) {
     this.texture = null;
     this.matrix = null;
     this.primitive = null;
+    this.anims = [];
+    this.currAnim = 0;
 }
 
 SceneObject.prototype.updateTex = function() {
@@ -11,14 +13,35 @@ SceneObject.prototype.updateTex = function() {
 
     if (this.texture == null) return;
 
-    this.primitive.updateTex(this.texture.amplif_factor.s, this.texture.amplif_factor.t);
+    this.primitive.updateTex(this.texture.leng.s, this.texture.leng.t);
 };
 
 SceneObject.prototype.draw = function(scene) {
     scene.pushMatrix();
     this.updateTex();
     this.material.apply();
+
+     // Animation transformations
+    if (this.currAnim < this.anims.length) {
+        scene.multMatrix(this.anims[this.currAnim].matrix);
+    }
+
     scene.multMatrix(this.matrix);
+
     this.primitive.display();
     scene.popMatrix();
+};
+
+SceneObject.prototype.updateAnims = function(delta) {
+
+    if (this.anims.length == 0 || this.currAnim >= this.anims.length) 
+        return;
+
+    console.log('===============>oi');
+
+    if (this.anims[this.currAnim].done) 
+        ++this.currAnim;
+
+    if(this.currAnim < this.anims.length) 
+        this.anims[this.currAnim].update(delta);
 };

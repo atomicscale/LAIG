@@ -22,10 +22,10 @@ function LSXIllumination() {
 
     this.info = function() {
         if(this.defaultValues)
-            console.log('ILLUMINATION - Default values\n');
+            console.log('illumination - Default values\n');
         else
-            console.log('ILLUMINATION - Not default values\n');
+            console.log('illumination - Not default values\n');
 
-        console.log('{\n   ambient: (' + this.ambient.r + ',' + this.ambient.g + ',' + this.ambient.b + ',' + this.ambient.a + '),\n   background: (' + this.background.r + ',' + this.background.g + ',' + this.background.b + ',' + this.background.a + ')\n}');
+        console.log('{\n ambient: (' + this.ambient.r + ',' + this.ambient.g + ',' + this.ambient.b + ',' + this.ambient.a + '),\n   background: (' + this.background.r + ',' + this.background.g + ',' + this.background.b + ',' + this.background.a + ')\n}');
     };
 }

@@ -49,8 +49,9 @@ serialInclude(['../lib/CGF.js',
     'lsxparser/LSXLight.js',
     'lsxparser/LSXMaterial.js',
     'lsxparser/LSXNode.js',
-    'lsxparser/LSXTexture.js',
-    'lsxparser/LSXParser.js',
+    'lsxparser/DSXTexture.js',
+    'lsxparser/DSXParser.js',
+    'lsxparser/LSXAnimation.js',
 
     'primitives/MyCircle.js',
     'primitives/MyCylinder.js',
@@ -58,18 +59,22 @@ serialInclude(['../lib/CGF.js',
     'primitives/MyQuad.js',
     'primitives/MyTriangle.js',
     'primitives/MySphere.js',
+    'primitives/MyTorus.js',
+
+    'animation/animation.js',
+    'animation/LinearAnimation.js',
+    'animation/CircularAnimation.js',
 
     'lsxscene/SceneMaterial.js',
     'lsxscene/SceneTexture.js',
     'lsxscene/SceneObject.js',
-    'LSXscene.js',
+    'DSXscene.js',
     'Interface.js',
 
     main = function() {
         var app = new CGFapplication(document.body);
-        var myScene = new LSXscene();
         var myInterface = new Interface();
-        myInterface.setScene(myScene);
+        var myScene = new DSXscene(myInterface);
 
         app.init();
 
@@ -78,9 +83,9 @@ serialInclude(['../lib/CGF.js',
 
         myInterface.setActiveCamera(myScene.camera);
 
-        var filename = getUrlVars()['file'] || "scene1/LAIG_TP1_LSX_T01_G11_v1.lsx";
+        var filename = getUrlVars()['file'] || "scene1/LAIG_TP1_LSX_T01_G11_v1.dsx";
 
-        var myGraph = new LSXParser(filename, myScene);
+        var myGraph = new DSXParser(filename, myScene);
 
         app.run();
     }

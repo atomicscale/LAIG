@@ -1,13 +1,16 @@
 var deg2rad = Math.PI / 180;
 
-function LSXscene() {
-    CGFscene.call(this);
+function DSXscene(myInterface) {
+  CGFscene.call(this);
+
+  this.interface=myInterface;
+
 }
 
-LSXscene.prototype = Object.create(CGFscene.prototype);
-LSXscene.prototype.constructor = LSXscene;
+DSXscene.prototype = Object.create(CGFscene.prototype);
+DSXscene.prototype.constructor = DSXscene;
 
-LSXscene.prototype.init = function(application) {
+DSXscene.prototype.init = function(application) {
     CGFscene.prototype.init.call(this, application);
 
     this.initCameras();
@@ -22,12 +25,17 @@ LSXscene.prototype.init = function(application) {
     this.textures = [];
     this.materials = [];
     this.leaves = [];
+    this.animations = [];
     this.objects = [];
+    this.lightsStatus = [];
+    this.viewIndex = 0;
 
     this.axis = new CGFaxis(this);
+    this.currTime = new Date().getTime();
+    this.setUpdatePeriod(10);
 };
 
-LSXscene.prototype.initCameras = function() {
+DSXscene.prototype.initCameras = function() {
     this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(50, 10, 10), vec3.fromValues(0, 0, 0));
 };
 
@@ -35,7 +43,7 @@ LSXscene.prototype.initCameras = function() {
  * Sets the default scene appearance based on an material named "default"
  * if it is present in the .lsx scene file
  */
-LSXscene.prototype.setDefaultAppearance = function() {
+DSXscene.prototype.setDefaultAppearance = function() {
     for (var i = 0; i < this.materials.length; i++) {
         if (this.materials[i].id == "default") {
             this.materials[i].apply();
@@ -48,12 +56,12 @@ LSXscene.prototype.setDefaultAppearance = function() {
  * Function called by a {LSXParser} once it is done parsing
  * a scene in .lsx format
  */
-LSXscene.prototype.onGraphLoaded = function() {
+DSXscene.prototype.onGraphLoaded = function() {
     // Frustum
-    this.camera.near = this.graph.config.camera.frustum.near;
-    this.camera.far = this.graph.config.camera.frustum.far;
+    /*this.camera.near = this.graph.config.camera.frustum.near;
+    this.camera.far = this.graph.config.camera.frustum.far;*/
 
-    this.axis = new CGFaxis(this, this.graph.config.camera.reference);
+    //this.axis = new CGFaxis(this, this.graph.config.camera.reference);
 
     // Illumination
     var bg_illum = this.graph.config.illumination.global.background;
@@ -63,7 +71,7 @@ LSXscene.prototype.onGraphLoaded = function() {
     this.setGlobalAmbientLight(ambi_illum.r, ambi_illum.g, ambi_illum.b, ambi_illum.a);
 
     // Lights
-    this.initLights();
+    this.initGraphLights();
 
     // Textures
     if (this.graph.config.textures.length > 0)
@@ -71,7 +79,7 @@ LSXscene.prototype.onGraphLoaded = function() {
 
     var text = this.graph.config.textures;
     for (var i = 0; i < text.length; i++) {
-        var aux = new SceneTexture(this, text[i].id, text[i].path, text[i].amplif_factor);
+        var aux = new SceneTexture(this, text[i].id, text[i].path, text[i].leng);
 
         this.textures.push(aux);
     }
@@ -89,14 +97,40 @@ LSXscene.prototype.onGraphLoaded = function() {
         this.materials.push(aux);
     }
 
+    this.updateView();
+
     // Leaves
     this.initLeaves();
+
+    //animations
+    var anims = this.graph.config.animations;
+    for (i = 0; i < anims.length; ++i) {
+        switch (anims[i].type) {
+            case "linear":
+                this.animations.push(new LinearAnimation(anims[i].id, anims[i].span, anims[i].args));
+                break;
+            case "circular":
+                this.animations.push(new CircularAnimation(anims[i].id, anims[i].span,
+                    anims[i].args["center"],
+                    anims[i].args["radius"],
+                    deg2rad * anims[i].args["startang"],
+                    deg2rad * anims[i].args["rotang"]));
+                break;
+        }
+    }
 
     // Nodes
     this.initNodes();
 };
 
-LSXscene.prototype.display = function() {
+DSXscene.prototype.updateView = function () {
+    this.camera = this.graph.config.perspectives[this.viewIndex];
+    this.interface.setActiveCamera(this.graph.config.perspectives[this.viewIndex]);
+
+    this.viewIndex = (++this.viewIndex) % this.graph.config.perspectives.length;
+};
+
+DSXscene.prototype.display = function() {
     //this.shader.bind();
     this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
@@ -113,8 +147,7 @@ LSXscene.prototype.display = function() {
 
         if (this.axis.length != 0) this.axis.display();
 
-        // Apply initial transformations
-        this.applyInitials();
+       
 
         // Update lights
         for (var i = 0; i < this.lights.length; i++)
@@ -127,72 +160,105 @@ LSXscene.prototype.display = function() {
         }
     }
 
-   // this.shader.unbind();
+    this.updateLights();
+
+    //this.shader.unbind();
 };
 
 /**
  * Apply the initial transformations defined in <INITIALS>
  */
-LSXscene.prototype.applyInitials = function() {
-    var inits = this.graph.config.camera;
-    var trans = inits.translation;
-    var scale = inits.scale;
-    var rots = inits.rotations;
 
-    this.translate(trans.x, trans.y, trans.z);
-    for (var i = 0; i < rots.length; i++) {
-        switch (rots[i].axis) {
-            case 'x':
-                this.rotate(rots[i].angle * deg2rad, 1, 0, 0);
-                break;
-            case 'y':
-                this.rotate(rots[i].angle * deg2rad, 0, 1, 0);
-                break;
-            case 'z':
-                this.rotate(rots[i].angle * deg2rad, 0, 0, 1);
-                break;
-        }
+
+DSXscene.prototype.initGraphLights = function () {
+    var index = 0;
+
+
+    this.lightsStatus= new Array( this.graph.config.illumination.omniLights.length + this.graph.config.illumination.spotLights.length);
+
+    for (var i = 0; i < this.graph.config.illumination.omniLights.length; i++,index++) {
+      var omni = this.graph.config.illumination.omniLights[i];
+
+      this.lights[index].setPosition(omni.location.x, omni.location.y, omni.location.z, omni.location.w);
+      this.lights[index].setAmbient(omni.ambient.r, omni.ambient.g, omni.ambient.b, omni.ambient.a);
+      this.lights[index].setDiffuse(omni.diffuse.r, omni.diffuse.g, omni.diffuse.b, omni.diffuse.a);
+      this.lights[index].setSpecular(omni.specular.r, omni.specular.g, omni.specular.b, omni.specular.a);
+
+      this.lightsStatus[index] = omni.enabled;
+      this.interface.addLight("omni",index,omni.id);
+
+      if (omni.enabled)
+        this.lights[index].enable();
+      else
+        this.lights[index].disable();
+
+      this.lights[index].setVisible(true);
+      this.lights[index].update();
     }
-    this.scale(scale.sx, scale.sy, scale.sz);
+
+
+
+    for (var i = 0; i < this.graph.config.illumination.spotLights.length; i++,index++) {
+      var spot = this.graph.config.illumination.spotLights[i];
+
+      this.lights[index].setPosition(spot.location.x, spot.location.y, spot.location.z, 1);
+      this.lights[index].setAmbient(spot.ambient.r, spot.ambient.g, spot.ambient.b, spot.ambient.a);
+      this.lights[index].setDiffuse(spot.diffuse.r, spot.diffuse.g, spot.diffuse.b, spot.diffuse.a);
+      this.lights[index].setSpecular(spot.specular.r, spot.specular.g, spot.specular.b, spot.specular.a);
+      this.lights[index].setSpotExponent(spot.exponent);
+      this.lights[index].setSpotDirection(spot.direction.x, spot.direction.y, spot.direction.z);
+
+      this.lightsStatus[index] = spot.enabled;
+      this.interface.addLight("spot",index,spot.id);
+
+      if (spot.enabled)
+        this.lights[index].enable();
+      else
+        this.lights[index].disable();
+
+      this.lights[index].setVisible(true);
+      this.lights[index].update();
+    }
+
+
+
 };
+
+
+DSXscene.prototype.updateLights = function () {
+
+  for (var i = 0; i < this.lightsStatus.length; i++) {
+    if(this.lightsStatus[i])
+      this.lights[i].enable();
+    else
+      this.lights[i].disable();
+  }
+
+  for (var i = 0; i < this.lights.length; i++)
+    this.lights[i].update();
+
+}
 
 /**
  * Adds lights to scene defined in <LIGHTS>
  */
-LSXscene.prototype.initLights = function() {
-    //this.shader.bind();
-
-    this.lights = [];
-    this.lightsID = [];
-
-    for (var i = 0; i < this.graph.config.illumination.lights.length; i++) {
-        var l = this.graph.config.illumination.lights[i];
-        var aux = new CGFlight(this, i);
-
-        aux.id = l.id;
-        l.enabled ? aux.enable() : aux.disable();
-        aux.setPosition(l.position.x, l.position.y, l.position.z, l.position.w);
-        aux.setAmbient(l.ambient.r, l.ambient.g, l.ambient.b, l.ambient.a);
-        aux.setDiffuse(l.diffuse.r, l.diffuse.g, l.diffuse.b, l.diffuse.a);
-        aux.setSpecular(l.specular.r, l.specular.g, l.specular.b, l.specular.a);
-        aux.setVisible(true);
-        aux.update();
-
-        this.lights[i] = aux;
-        this.lightsID[l.id] = l.enabled;
-    }
-
-    //this.shader.unbind();
-
-    this.interface.initLights();
+DSXscene.prototype.initLights = function() {
+    
+  this.lights[0].setPosition(2, 3, 3, 1);
+  this.lights[0].setAmbient(0, 0, 0, 1);
+  this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
+  this.lights[0].setSpecular(1.0, 1.0, 1.0, 1.0);
+  this.lights[0].setVisible(true);
+  this.lights[0].enable();
+  this.lights[0].update();
 
 };
 
 /**
  * Adds leaves (primitives) defined in <LEAVES>
  */
-LSXscene.prototype.initLeaves = function() {
-    for (var i = 0; i < this.graph.config.XML.parsedTree.leaves.length; i++) {
+DSXscene.prototype.initLeaves = function() {
+for (var i = 0; i < this.graph.config.XML.parsedTree.leaves.length; i++) {
         var leaf = this.graph.config.XML.parsedTree.leaves[i];
         switch (leaf.type) {
             case "rectangle":
@@ -215,6 +281,11 @@ LSXscene.prototype.initLeaves = function() {
                 primitive.id = leaf.id;
                 this.leaves.push(primitive);
                 break;
+         	case "torus":
+                primitive = new MyTorus(this, leaf.args);
+                primitive.id = leaf.id;
+                this.leaves.push(primitive);
+                break;
         }
     }
 };
@@ -227,23 +298,26 @@ LSXscene.prototype.initLeaves = function() {
  * a {SceneObject} based on the transformations and materials/textures
  * defined in previous nodes and the primitive which the leaf represents
  */
-LSXscene.prototype.initNodes = function() {
+DSXscene.prototype.initNodes = function() {
     var nodes_list = this.graph.config.XML.parsedTree.nodes;
 
     var root_node = this.graph.findNode(this.graph.config.XML.parsedTree.root_id);
-    this.DFS(root_node, root_node.material, root_node.texture, root_node.matrix);
+    this.DFS(root_node, root_node.material, root_node.texture, root_node.matrix, root_node.anims);
 };
 
-LSXscene.prototype.DFS = function(node, currMaterial, currTexture, currMatrix) {
+DSXscene.prototype.DFS = function(node, currMaterial, currTexture, currMatrix, currAnimations) {
     var nextMat = node.material;
     if (node.material == "null") nextMat = currMaterial;
 
     var nextTex = node.texture;
+
     if (node.texture == "null") nextTex = currTexture;
     else if (node.texture == "clear") nextTex = null;
 
     var nextMatrix = mat4.create();
     mat4.multiply(nextMatrix, currMatrix, node.matrix);
+
+    var nextAnimations = currAnimations.concat(node.anims);
 
     for (var i = 0; i < node.descendants.length; i++) {
         var nextNode = this.graph.findNode(node.descendants[i]);
@@ -252,6 +326,10 @@ LSXscene.prototype.DFS = function(node, currMaterial, currTexture, currMatrix) {
             var aux = new SceneObject(node.descendants[i]);
             aux.material = this.getMaterial(nextMat);
             aux.texture = this.getTexture(nextTex);
+            for (var k = 0; k < nextAnimations.length; ++k) {
+                var animation = this.getAnimations(nextAnimations[k]).clone();
+                aux.anims.push(animation);
+            }
             aux.matrix = nextMatrix;
             aux.isLeaf = true;
             for (var j = 0; j < this.leaves.length; j++) {
@@ -264,14 +342,23 @@ LSXscene.prototype.DFS = function(node, currMaterial, currTexture, currMatrix) {
             continue;
         }
 
-        this.DFS(nextNode, nextMat, nextTex, nextMatrix);
+        this.DFS(nextNode, nextMat, nextTex, nextMatrix, nextAnimations);
     }
 };
 
+DSXscene.prototype.getAnimations = function(id) {
+    if (id == null) return null;
+
+    for (var i = 0; i < this.animations.length; ++i)
+        if (id == this.animations[i].id) 
+            return this.animations[i];
+
+    return null;
+};
 /**
  * @returns {SceneMaterial} with the {string} id specified
  */
-LSXscene.prototype.getMaterial = function(id) {
+DSXscene.prototype.getMaterial = function(id) {
     if (id == null) return null;
 
     for (var i = 0; i < this.materials.length; i++)
@@ -283,7 +370,7 @@ LSXscene.prototype.getMaterial = function(id) {
 /**
  * @returns {SceneTexture} with the {string} id specified
  */
-LSXscene.prototype.getTexture = function(id) {
+DSXscene.prototype.getTexture = function(id) {
     if (id == null) return null;
 
     for (var i = 0; i < this.textures.length; i++)
@@ -296,10 +383,18 @@ LSXscene.prototype.getTexture = function(id) {
  * Called from interface when a button is pressed
  * Switches light on or off
  */
-LSXscene.prototype.switchLight = function(id, _switch) {
+DSXscene.prototype.switchLight = function(id, _switch) {
     for (var i = 0; i < this.lights.length; ++i) {
         if (id == this.lights[i].id) {
             _switch ? this.lights[i].enable() : this.lights[i].disable();
         }
     }
+};
+
+DSXscene.prototype.update = function(currTime) {
+    var delta = currTime - this.currTime;
+    this.currTime = currTime;
+
+    for (var i = 0; i < this.objects.length; ++i)
+        this.objects[i].updateAnims(delta);
 };
