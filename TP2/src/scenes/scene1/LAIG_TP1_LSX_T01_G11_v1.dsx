@@ -10,7 +10,7 @@
         </perspective>
 
         <perspective id="p2" near="0.1" far="1500" angle="40">
-            <from x="25" y="25" z="25" />
+            <from x="0" y="5" z="60" />
             <to x="0" y="0" z="0" />
         </perspective>
 
@@ -72,6 +72,7 @@
         <texture id="road" file="textures/estradaz.jpg" length_s="5.0" length_t="4.0" />
         <texture id="landing" file="textures/roadz.jpg" length_s="5.0" length_t="4.0" />
         <texture id="boardTex" file="textures/boardTex.png" length_s="1.0" length_t="1.0" />
+        <texture id="marsTex" file="textures/mars.jpg" length_s="1.0" length_t="1.0" />
 </textures>
 
     <materials>
@@ -105,6 +106,7 @@
     <primitive id="asa" type="cylinder" args="0.7 0.2 0.1 20 20" />
     <primitive id="front" type="cylinder" args="0.7 0.01 0.1 20 20" />
     <primitive id="toro" type="torus" args="0.75 0.5 100 100" />
+    <primitive id="plano" type="plane" dimX="5" dimY="5" partsX="20" partsY="20"/>
     <primitive id="patch" type="patch" orderU="2" orderV="3" partsU="20" partsV="20">
                 <controlpoint x="-2.0" y="-2.0" z="1.0" />
                <controlpoint x="-2.0" y="-1.0" z="-2.0" />
@@ -154,6 +156,7 @@
                 <!-- deve existir uma ou mais tags "componentref" e/ou -->
                 <!-- "componentref", identificando outros -->
                 <!-- componentes ou primitivas -->
+                <componentref id="planos" />
                 <componentref id="patches" />
                 <componentref id="estrada" />              
                 <componentref id="landing" />
@@ -163,13 +166,24 @@
         </children>
     </component>
 
+    <component id="planos">
+            <material id="null"  />
+            <texture id="marsTex" />
+
+            <translate x="0" y="0" z="0" />
+
+            <children>
+                <primitiveref id="plano" />
+            </children>
+
+        </component>
+
     <component id="patches">
-            <materials>
-                <material id="null"  />
-            </materials>
+            <material id="null"  />
             <texture id="boardTex" />
 
-            <translate x="20" y="10" z="10" />
+            <translate x="-10" y="0" z="0" />
+
 
             <children>
                 <primitiveref id="patch" />

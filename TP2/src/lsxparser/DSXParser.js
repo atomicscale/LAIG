@@ -378,6 +378,20 @@ DSXParser.prototype.parseLeaves = function(element) {
                     leaf.args.push(parseFloat(args_aux[j]));
                 
                 break;
+            case "plane":
+                if (args_aux.length != 4)
+                    return "Invalid number of arguments for type 'plane'";
+
+                var dX = this.config.XML.data.getFloat(leaves[i], 'dimX');
+                var dY = this.config.XML.data.getFloat(leaves[i], 'dimY');
+                var partsX = this.config.XML.data.getInteger(leaves[i], 'partsX');
+                var partsY = this.config.XML.data.getInteger(leaves[i], 'partsY');
+                leaf.args.push(dX);
+                leaf.args.push(dY);
+                leaf.args.push(partsX);
+                leaf.args.push(partsY);
+                
+                break;
             case "patch":
                 var orderU = this.config.XML.data.getInteger(leaves[i], 'orderU');
                 var orderV = this.config.XML.data.getInteger(leaves[i], 'orderV');
