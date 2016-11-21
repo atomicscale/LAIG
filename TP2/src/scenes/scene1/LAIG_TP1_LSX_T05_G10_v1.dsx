@@ -71,8 +71,8 @@
         <texture id="fuselagem" file="textures/fuselagem.jpg" length_s="1.0" length_t="1.0" />
         <texture id="road" file="textures/estradaz.jpg" length_s="5.0" length_t="4.0" />
         <texture id="landing" file="textures/roadz.jpg" length_s="5.0" length_t="4.0" />
-        <texture id="boardTex" file="textures/boardTex.png" length_s="1.0" length_t="1.0" />
-        <texture id="marsTex" file="textures/mars.jpg" length_s="1.0" length_t="1.0" />
+        <texture id="boardTex" file="textures/ground.jpg" length_s="1.0" length_t="1.0" />
+        <texture id="marsTex" file="textures/marble.png" length_s="1.0" length_t="1.0" />
 </textures>
 
     <materials>
@@ -175,7 +175,7 @@
     <component id="chessboard1">
 
            <material id="null"  />
-           <texture id="boardTex" />
+           <texture id="marsTex" />
         
 
             <translate x="-20" y="0" z="0" />
