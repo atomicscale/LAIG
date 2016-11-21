@@ -10,7 +10,7 @@
         </perspective>
 
         <perspective id="p2" near="0.1" far="1500" angle="40">
-            <from x="0" y="5" z="60" />
+            <from x="-5" y="5" z="60" />
             <to x="0" y="0" z="0" />
         </perspective>
 
@@ -123,6 +123,11 @@
                <controlpoint x="2.0" y="1.0" z="-5.0" />
                <controlpoint x="2.0" y="2.0" z="1.0" />
     </primitive>
+    <primitive id ="xadrez" type="chessboard" du="10" dv="10" textureref="textures/boardTex.png" su="2" sv="1">
+                   <c1 r="0" g="0.4" b="0.2" a="1.0" />
+                   <c2 r="0.7" g="0.6" b="0.0" a="1.0" />
+                   <cs r="1.0" g="0.0" b="1.0" a="1.0" />
+    </primitive>
 
 </primitives>
 
@@ -156,6 +161,7 @@
                 <!-- deve existir uma ou mais tags "componentref" e/ou -->
                 <!-- "componentref", identificando outros -->
                 <!-- componentes ou primitivas -->
+                <componentref id="chessboard1" />
                 <componentref id="planos" />
                 <componentref id="patches" />
                 <componentref id="estrada" />              
@@ -164,6 +170,21 @@
                 
 
         </children>
+    </component>
+
+    <component id="chessboard1">
+
+           <material id="null"  />
+           <texture id="boardTex" />
+        
+
+            <translate x="-20" y="0" z="0" />
+            
+
+            <children>
+                <primitiveref id="xadrez" />
+            </children>
+
     </component>
 
     <component id="planos">

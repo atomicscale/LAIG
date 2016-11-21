@@ -296,6 +296,11 @@ for (var i = 0; i < this.graph.config.XML.parsedTree.leaves.length; i++) {
                 primitive.id = leaf.id;
                 this.leaves.push(primitive);
                 break;
+            case "chessboard":
+                primitive = new MyChessboard(this, leaf.args);
+                primitive.id = leaf.id;
+                this.leaves.push(primitive);
+                break;
         }
     }
 };

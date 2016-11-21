@@ -323,7 +323,7 @@ DSXParser.prototype.parseLeaves = function(element) {
         var leaf = new LSXLeaf(leaves[i].getAttribute('id'));
         leaf.type = this.config.XML.data.getString(leaves[i], 'type');
 
-        var noargslist = ['terrain', 'plane', 'patch'];
+        var noargslist = ['terrain', 'plane', 'patch', 'chessboard'];
 
         if (noargslist.indexOf(leaf.type) < 0) {
             var args_aux = leaves[i].getAttribute('args').split(" ");
@@ -412,8 +412,58 @@ DSXParser.prototype.parseLeaves = function(element) {
                 if (cps.length != 12) return "Invalid number of control points";
                 leaf.args.push(cps);
                 break;
-        }
+            case "chessboard":
+                var du = this.config.XML.data.getFloat(leaves[i], 'du');
+                var dv = this.config.XML.data.getFloat(leaves[i], 'dv');
+                var textureref = this.config.textures_path;
+                textureref += this.config.XML.data.getString(leaves[i], 'textureref');
+                var su = this.config.XML.data.getFloat(leaves[i], 'su');
+                var sv = this.config.XML.data.getFloat(leaves[i], 'sv');
+                leaf.args.push(du);
+                leaf.args.push(dv);
+                leaf.args.push(textureref);
+                leaf.args.push(su);
+                leaf.args.push(sv);
+                
 
+                var c1s = [];
+                var c1s_list = leaves[i].getElementsByTagName('c1');
+                for (var k = 0; k < c1s_list.length; ++k) {
+                    var c1 = [];
+                    c1[0] = this.config.XML.data.getFloat(c1s_list[k], 'r');
+                    c1[1] = this.config.XML.data.getFloat(c1s_list[k], 'g');
+                    c1[2] = this.config.XML.data.getFloat(c1s_list[k], 'b');
+                    c1[3] = this.config.XML.data.getFloat(c1s_list[k], 'a');;
+                    c1s.push(c1);
+                }
+                leaf.args.push(c1s);
+
+                var c2s = [];
+                var c2s_list = leaves[i].getElementsByTagName('c2');
+                for (var k = 0; k < c2s_list.length; ++k) {
+                    var c2 = [];
+                    c2[0] = this.config.XML.data.getFloat(c2s_list[k], 'r');
+                    c2[1] = this.config.XML.data.getFloat(c2s_list[k], 'g');
+                    c2[2] = this.config.XML.data.getFloat(c2s_list[k], 'b');
+                    c2[3] = this.config.XML.data.getFloat(c2s_list[k], 'a');;
+                    c2s.push(c2);
+                }
+                leaf.args.push(c2s);
+
+                var c3s = [];
+                var c3s_list = leaves[i].getElementsByTagName('cs');
+                for (var k = 0; k < c3s_list.length; ++k) {
+                    var c3 = [];
+                    c3[0] = this.config.XML.data.getFloat(c3s_list[k], 'r');
+                    c3[1] = this.config.XML.data.getFloat(c3s_list[k], 'g');
+                    c3[2] = this.config.XML.data.getFloat(c3s_list[k], 'b');
+                    c3[3] = this.config.XML.data.getFloat(c3s_list[k], 'a');;
+                    c3s.push(c3);
+                }
+                leaf.args.push(c3s);
+                break;
+
+            }
         leaf.info();
         this.config.XML.parsedTree.leaves.push(leaf);
     }
@@ -561,6 +611,18 @@ DSXParser.prototype.onXMLError = function(message) {
     console.error("Operation failed.\nError: " + message);
 };
 
+DSXParser.prototype.getRGBAElement = function(element) {
+    if (element == null) {
+        this.onXMLError("Error loading 'RGBA' element .");
+        return 1;
+    }
+
+    var res = new ColorRGBA(this.config.XML.getFloat(element, 'r'), this.config.XML.getFloat(element, 'g'),
+        this.config.XML.getFloat(element, 'b'), this.config.XML.getFloat(element, 'a'));
+
+    return res;
+}
+
 class Light {
   constructor(id, enabled, ambient, diffuse, specular) {
     this.id = id;
@@ -609,3 +671,4 @@ class Point3 {
 		return [this.x, this.y, this.z];
 	}
 }
+
