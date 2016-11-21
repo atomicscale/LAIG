@@ -123,7 +123,7 @@
                <controlpoint x="2.0" y="1.0" z="-5.0" />
                <controlpoint x="2.0" y="2.0" z="1.0" />
     </primitive>
-    <primitive id ="xadrez" type="chessboard" du="10" dv="10" textureref="textures/boardTex.png" su="2" sv="1">
+    <primitive id ="xadrez" type="chessboard" du="10" dv="10" textureref="textures/marble.png" su="2" sv="1">
                    <c1 r="0" g="0.4" b="0.2" a="1.0" />
                    <c2 r="0.7" g="0.6" b="0.0" a="1.0" />
                    <cs r="1.0" g="0.0" b="1.0" a="1.0" />
@@ -175,7 +175,7 @@
     <component id="chessboard1">
 
            <material id="null"  />
-           <texture id="marsTex" />
+           <texture id="null" />
         
 
             <translate x="-20" y="0" z="0" />

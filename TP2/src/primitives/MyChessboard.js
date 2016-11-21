@@ -36,12 +36,10 @@ MyChessboard.prototype.constructor = MyChessboard;
 
 MyChessboard.prototype.display = function() {
 
-    this.texture.bind(1);
+    this.texture.bind(0);
 
     this.scene.setActiveShader(this.shader);
     this.plane.display();
     this.scene.setActiveShader(this.scene.defaultShader);
 
 };
-
-MyChessboard.prototype.updateTex = function(ampS, ampT){};
