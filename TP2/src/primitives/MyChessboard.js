@@ -7,7 +7,7 @@ function MyChessboard(scene,args) {
     this.texture = new CGFtexture(scene, this.args[2]);
 
     this.su = this.args[3];
-    this.dv = this.args[4];
+    this.sv = this.args[4];
 
     this.c1 = this.args[5];
     this.c2 = this.args[6];
@@ -28,6 +28,7 @@ function MyChessboard(scene,args) {
                                   sV:parseInt(this.sv)*1.0
                                   });
 
+    console.log(this.shader);
 };
 
 
