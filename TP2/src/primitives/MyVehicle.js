@@ -113,6 +113,13 @@ MyVehicle.prototype.display = function() {
     this.front.display();
     this.scene.popMatrix();
 
+    this.scene.pushMatrix();
+    this.scene.translate(0.625, 0.95, 0.85);
+    this.front.display();
+    this.scene.popMatrix();
+
+
+
     // Tail
     this.scene.pushMatrix();
     this.scene.translate(0, 0.95, -2.5);
