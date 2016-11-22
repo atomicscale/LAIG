@@ -301,6 +301,11 @@ for (var i = 0; i < this.graph.config.XML.parsedTree.leaves.length; i++) {
                 primitive.id = leaf.id;
                 this.leaves.push(primitive);
                 break;
+            case "vehicle":
+                primitive = new MyVehicle(this);
+                primitive.id = leaf.id;
+                this.leaves.push(primitive);
+                break;
         }
     }
 };

@@ -323,7 +323,7 @@ DSXParser.prototype.parseLeaves = function(element) {
         var leaf = new LSXLeaf(leaves[i].getAttribute('id'));
         leaf.type = this.config.XML.data.getString(leaves[i], 'type');
 
-        var noargslist = ['terrain', 'plane', 'patch', 'chessboard'];
+        var noargslist = ['terrain', 'plane', 'patch', 'chessboard', 'vehicle'];
 
         if (noargslist.indexOf(leaf.type) < 0) {
             var args_aux = leaves[i].getAttribute('args').split(" ");
@@ -461,6 +461,8 @@ DSXParser.prototype.parseLeaves = function(element) {
                     c3s.push(c3);
                 }
                 leaf.args.push(c3s);
+                break;
+                case "vehicle":
                 break;
 
             }

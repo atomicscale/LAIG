@@ -133,6 +133,8 @@
                    <c2 r="0.3" g="0.3" b="0.3" a="0.3" />
                    <cs r="1.0" g="0.0" b="1.0" a="1.0" />
     </primitive>
+    <primitive id="veiculo" type="vehicle"/>
+
 
 </primitives>
 
@@ -166,6 +168,7 @@
                 <!-- deve existir uma ou mais tags "componentref" e/ou -->
                 <!-- "componentref", identificando outros -->
                 <!-- componentes ou primitivas -->
+                <componentref id="chopper" />
                 <componentref id="chessboard1" />
                 <componentref id="planos" />
                 <componentref id="patches" />
@@ -175,6 +178,21 @@
                 
 
         </children>
+    </component>
+
+    <component id="chopper">
+
+           <material id="defaultmaterial"  />
+           <texture id="null" />
+        
+
+            <translate x="-25" y="-3" z="0" />
+            
+
+            <children>
+                <primitiveref id="veiculo" />
+            </children>
+
     </component>
 
     <component id="chessboard1">
