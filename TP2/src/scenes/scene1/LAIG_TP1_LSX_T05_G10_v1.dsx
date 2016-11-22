@@ -10,16 +10,21 @@
         </perspective>
 
         <perspective id="p2" near="0.1" far="1500" angle="40">
-            <from x="-5" y="5" z="60" />
-            <to x="0" y="0" z="0" />
+            <from x="-10" y="5" z="30" />
+            <to x="-10" y="0" z="0" />
         </perspective>
 
         <perspective id="p3" near="0.1" far="1500" angle="90">
+            <from x="-20" y="0" z="1.2" />
+            <to x="-20" y="0" z="0" />
+        </perspective>
+
+        <perspective id="p4" near="0.1" far="1500" angle="90">
             <from x="100" y="25" z="200" />
             <to x="0" y="0" z="0" />
         </perspective>
 
-        <perspective id="p4" near="0.1" far="1500" angle="50">
+        <perspective id="p5" near="0.1" far="1500" angle="50">
             <from x="300" y="0" z="800" />
             <to x="3" y="0" z="0" />
         </perspective>
@@ -123,9 +128,9 @@
                <controlpoint x="2.0" y="1.0" z="-5.0" />
                <controlpoint x="2.0" y="2.0" z="1.0" />
     </primitive>
-    <primitive id ="xadrez" type="chessboard" du="10" dv="10" textureref="textures/marble.png" su="2" sv="1">
+    <primitive id ="xadrez" type="chessboard" du="10" dv="10" textureref="textures/blackmarble.jpg" su="2" sv="1">
                    <c1 r="0" g="0.4" b="0.2" a="1.0" />
-                   <c2 r="0.7" g="0.6" b="0.0" a="1.0" />
+                   <c2 r="0.3" g="0.3" b="0.3" a="0.3" />
                    <cs r="1.0" g="0.0" b="1.0" a="1.0" />
     </primitive>
 
