@@ -54,7 +54,7 @@ function GameState(scene) {
 
   this.board = new MyBoard(this.scene);
 
- 
+ this.scoreboard = new MyScore(this,this.matWOODBRIGHT,this.fontRED);
 
   /* Picking Variables */
   this.selectedPiece;

@@ -60,7 +60,7 @@ GameScene.prototype.initLights = function () {
 };
 
 GameScene.prototype.initCameras = function () {
-  this.camera = new CGFcamera(1.2, 0.01, 500, vec3.fromValues(0, 45, 20), vec3.fromValues(0, 0, 0));
+  this.camera = new CGFcamera(0.4, 0.01, 500, vec3.fromValues(20, 25, -60), vec3.fromValues(20, 0, 50));
   this.cameraDestination = [0,10,20];
   this.cameraTransition = false;
   this.transitionTime = 2000;
@@ -116,7 +116,7 @@ GameScene.prototype.display = function () {
     this.popMatrix();
 
     if (this.graph.loadedOk && this.graph.Parser.Initials.axis_length > 0)
-			   this.axis.display();
+			   this.axis == 0;
 	}
 
 this.displayGame();
